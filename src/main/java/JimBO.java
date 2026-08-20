@@ -17,6 +17,9 @@ public class JimBO {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
+        String[] tasks = new String[100];
+        int taskCount = 0;
+
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String command = scanner.nextLine();
@@ -24,9 +27,17 @@ public class JimBO {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(LINE);
                 break;
+            } else if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+                System.out.println(LINE);
+            } else {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println("added: " + command);
+                System.out.println(LINE);
             }
-            System.out.println(command);
-            System.out.println(LINE);
         }
         scanner.close();
     }

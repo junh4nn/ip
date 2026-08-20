@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class JimBO {
     private static final String LINE = "____________________________________________________________";
 
@@ -15,7 +17,17 @@ public class JimBO {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(LINE);
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.nextLine();
+            if (command.equals("bye")) {
+                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println(LINE);
+                break;
+            }
+            System.out.println(command);
+            System.out.println(LINE);
+        }
+        scanner.close();
     }
 }

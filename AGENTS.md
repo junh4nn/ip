@@ -14,6 +14,7 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Guidance for interacting with users
 
+* Before implementing new features/improving on code, particularly for architecture and design decisions where genuine trade-offs exist, lay out the real options with pros and cons and let me choose, rather than deciding and presenting a finished choice.
 * Explain the rationale for significant actions: what you did and why.
 * Keep explanations brief but instructive, supporting learning through responsible use of AI. For example:
 

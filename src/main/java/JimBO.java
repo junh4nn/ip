@@ -36,10 +36,10 @@ public class JimBO {
                     System.out.println(LINE);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     String indexArg = command.length() > 4 ? command.substring(4) : "";
-                    setTaskDone(tasks, indexArg, true);
+                    setTaskDone(tasks, indexArg, DoneStatus.DONE);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
-                    setTaskDone(tasks, indexArg, false);
+                    setTaskDone(tasks, indexArg, DoneStatus.NOT_DONE);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.length() > 4 ? command.substring(4).trim() : "";
                     if (description.isEmpty()) {
@@ -101,10 +101,10 @@ public class JimBO {
      * @throws JimBOException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, boolean done) throws JimBOException {
-        int index = parseTaskIndex(tasks, indexArg, done ? "mark" : "unmark");
+    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, DoneStatus status) throws JimBOException {
+        int index = parseTaskIndex(tasks, indexArg, status == DoneStatus.DONE ? "mark" : "unmark");
         Task task = tasks.get(index);
-        if (done) {
+        if (status == DoneStatus.DONE) {
             task.markAsDone();
             System.out.println("Nice! I've marked this task as done:");
         } else {

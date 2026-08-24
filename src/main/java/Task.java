@@ -5,11 +5,11 @@
  */
 public abstract class Task {
     protected String description;
-    protected boolean isDone;
+    protected DoneStatus status;
 
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        this.status = DoneStatus.NOT_DONE;
     }
 
     public String getDescription() {
@@ -17,7 +17,7 @@ public abstract class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return (status == DoneStatus.DONE ? "X" : " "); // mark done task with X
     }
 
     /**
@@ -27,11 +27,11 @@ public abstract class Task {
     public abstract String getTypeIcon();
 
     public void markAsDone() {
-        this.isDone = true;
+        this.status = DoneStatus.DONE;
     }
 
     public void markAsNotDone() {
-        this.isDone = false;
+        this.status = DoneStatus.NOT_DONE;
     }
 
     @Override

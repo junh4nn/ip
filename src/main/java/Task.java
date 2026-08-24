@@ -1,7 +1,9 @@
 /**
  * Represents a task with a description and a done/not-done status.
+ * This is an abstract base class: concrete task types (e.g. Todo, Deadline,
+ * Event) extend it and specify their own type icon and any extra details.
  */
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -18,6 +20,12 @@ public class Task {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    /**
+     * Returns the single-letter icon identifying this task's type,
+     * e.g. "T" for Todo, "D" for Deadline, "E" for Event.
+     */
+    public abstract String getTypeIcon();
+
     public void markAsDone() {
         this.isDone = true;
     }
@@ -28,6 +36,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + getTypeIcon() + "][" + getStatusIcon() + "] " + description;
     }
 }

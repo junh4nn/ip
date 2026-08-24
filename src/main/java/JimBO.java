@@ -45,12 +45,30 @@ public class JimBO {
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("  " + tasks.get(index));
                 System.out.println(LINE);
-            } else {
-                tasks.add(new Task(command));
-                System.out.println("added: " + command);
-                System.out.println(LINE);
+            } else if (command.startsWith("todo ")) {
+                String description = command.substring(5);
+                addTask(tasks, new Todo(description));
+            } else if (command.startsWith("deadline ")) {
+                String[] parts = command.substring(9).split(" /by ", 2);
+                addTask(tasks, new Deadline(parts[0], parts[1]));
+            } else if (command.startsWith("event ")) {
+                String[] parts = command.substring(6).split(" /from ", 2);
+                String[] timeParts = parts[1].split(" /to ", 2);
+                addTask(tasks, new Event(parts[0], timeParts[0], timeParts[1]));
             }
         }
         scanner.close();
+    }
+
+    /**
+     * Adds the given task to the list and prints the standard
+     * "Got it. I've added this task" confirmation.
+     */
+    private static void addTask(ArrayList<Task> tasks, Task task) {
+        tasks.add(task);
+        System.out.println("Got it. I've added this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println(LINE);
     }
 }

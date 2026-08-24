@@ -50,6 +50,9 @@ public class JimBO {
                     addDeadline(tasks, command.length() > 8 ? command.substring(8).trim() : "");
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     addEvent(tasks, command.length() > 5 ? command.substring(5).trim() : "");
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    String indexArg = command.length() > 6 ? command.substring(6) : "";
+                    deleteTask(tasks, indexArg);
                 } else {
                     throw new JimBOException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -63,19 +66,20 @@ public class JimBO {
     }
 
     /**
-     * Marks or unmarks the task identified by {@code indexArg} (a 1-based
-     * task number, as typed by the user, possibly with surrounding
-     * whitespace) and prints the standard confirmation message.
+     * Parses {@code indexArg} (a 1-based task number, as typed by the user,
+     * possibly with surrounding whitespace) into a valid 0-based index into
+     * {@code tasks}. {@code commandName} is used to tailor the error message
+     * shown when {@code indexArg} is blank, e.g. "mark" or "delete".
      *
      * @throws JimBOException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, boolean done) throws JimBOException {
+    private static int parseTaskIndex(ArrayList<Task> tasks, String indexArg, String commandName)
+            throws JimBOException {
         String trimmed = indexArg.trim();
         if (trimmed.isEmpty()) {
-            String command = done ? "mark" : "unmark";
-            throw new JimBOException("Please tell me which task number to " + command
-                    + ", e.g. \"" + command + " 2\".");
+            throw new JimBOException("Please tell me which task number to " + commandName
+                    + ", e.g. \"" + commandName + " 2\".");
         }
         int index;
         try {
@@ -87,7 +91,18 @@ public class JimBO {
             throw new JimBOException("Task number " + (index + 1) + " doesn't exist. "
                     + "You currently have " + tasks.size() + " task(s) in the list.");
         }
+        return index;
+    }
 
+    /**
+     * Marks or unmarks the task identified by {@code indexArg} and prints
+     * the standard confirmation message.
+     *
+     * @throws JimBOException if the number is missing, not a valid integer,
+     *                        or does not correspond to a task in the list.
+     */
+    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, boolean done) throws JimBOException {
+        int index = parseTaskIndex(tasks, indexArg, done ? "mark" : "unmark");
         Task task = tasks.get(index);
         if (done) {
             task.markAsDone();
@@ -159,6 +174,22 @@ public class JimBO {
             throw new JimBOException("Please specify an end time for the event after \"/to\".");
         }
         addTask(tasks, new Event(description, from, to));
+    }
+
+    /**
+     * Removes the task identified by {@code indexArg} from the list and
+     * prints the standard "Noted. I've removed this task" confirmation.
+     *
+     * @throws JimBOException if the number is missing, not a valid integer,
+     *                        or does not correspond to a task in the list.
+     */
+    private static void deleteTask(ArrayList<Task> tasks, String indexArg) throws JimBOException {
+        int index = parseTaskIndex(tasks, indexArg, "delete");
+        Task task = tasks.remove(index);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println(LINE);
     }
 
     /**

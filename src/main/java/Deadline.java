@@ -25,6 +25,15 @@ public class Deadline extends Task {
         this.by = LocalDateTime.parse(by, INPUT_FORMAT);
     }
 
+    /**
+     * Constructs a Deadline from an already-parsed {@link LocalDateTime},
+     * e.g. when reconstructing a task from the save file.
+     */
+    public Deadline(String description, LocalDateTime by) {
+        super(description);
+        this.by = by;
+    }
+
     @Override
     public String getTypeIcon() {
         return "D";

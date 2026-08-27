@@ -12,6 +12,12 @@ public class Deadline extends Task {
      */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
+    /**
+     * Format used to display the "by" date/time back to the user,
+     * e.g. "Dec 02 2019, 6:00PM".
+     */
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+
     protected LocalDateTime by;
 
     public Deadline(String description, String by) {
@@ -26,7 +32,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return super.toString() + " (by: " + by + ")";
+        return super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 
     @Override

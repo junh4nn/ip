@@ -26,6 +26,10 @@ Unless the user says otherwise, assume that you are assisting a student working 
 * Make generated code as self-explanatory as possible, and include explanatory comments where they improve understanding.
 
 # Code Quality and Edits
+
+* Follow this coding standard: https://se-education.org/guides/conventions/java/index.html
+* Follow this git convention for commits etc: https://se-education.org/guides/conventions/git.html
+
 * After every code change, explain what was changed and why before moving on. 
 * Do not make multiple edits in a row without pausing for my approval after each one. 
 * If a task requires multiple edits across different files, list the planned changes first and wait for my go-ahead before starting. 

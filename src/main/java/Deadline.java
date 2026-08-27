@@ -1,11 +1,45 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Represents a task that needs to be done before a specific date/time,
  * e.g. "submit report by 11/10/2019 5pm".
  */
 public class Deadline extends Task {
-    protected String by;
+    /**
+     * Format accepted for the "by" date/time when typed by the user in a
+     * command, e.g. "2/12/2019 1800".
+     */
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
-    public Deadline(String description, String by) {
+    /**
+     * Format used to display the "by" date/time back to the user,
+     * e.g. "Dec 02 2019, 6:00PM".
+     */
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+
+    protected LocalDateTime by;
+
+    /**
+     * @throws JimboException if {@code by} does not match the expected
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     */
+    public Deadline(String description, String by) throws JimboException {
+        super(description);
+        try {
+            this.by = LocalDateTime.parse(by, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new JimboException("Invalid deadline date/time \"" + by
+                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+        }
+    }
+
+    /**
+     * Constructs a Deadline from an already-parsed {@link LocalDateTime},
+     * e.g. when reconstructing a task from the save file.
+     */
+    public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
     }
@@ -17,11 +51,12 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return super.toString() + " (by: " + by + ")";
+        return super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 
     @Override
     public String toSaveFormat() {
-        return "D | " + (status == DoneStatus.DONE ? 1 : 0) + " | " + description + " | " + by;
+        return "D | " + (status == DoneStatus.DONE ? 1 : 0) + " | " + description + " | "
+                + by.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

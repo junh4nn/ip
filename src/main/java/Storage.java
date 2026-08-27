@@ -3,6 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -94,7 +96,11 @@ public class Storage {
             if (fields.length != 4) {
                 throw new JimboException("Deadline has wrong number of fields.");
             }
-            task = new Deadline(description, fields[3]);
+            try {
+                task = new Deadline(description, LocalDateTime.parse(fields[3]));
+            } catch (DateTimeParseException e) {
+                throw new JimboException("Invalid deadline date/time in save file: " + fields[3]);
+            }
             break;
         case "E":
             if (fields.length != 5) {

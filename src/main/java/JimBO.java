@@ -18,7 +18,7 @@ public class Jimbo {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = Storage.load();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -113,6 +113,7 @@ public class Jimbo {
         }
         System.out.println("  " + task);
         System.out.println(LINE);
+        Storage.save(tasks);
     }
 
     /**
@@ -190,6 +191,7 @@ public class Jimbo {
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         System.out.println(LINE);
+        Storage.save(tasks);
     }
 
     /**
@@ -202,5 +204,6 @@ public class Jimbo {
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         System.out.println(LINE);
+        Storage.save(tasks);
     }
 }

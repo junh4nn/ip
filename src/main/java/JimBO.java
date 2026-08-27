@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class JimBO {
+public class Jimbo {
     private static final String LINE = "____________________________________________________________";
 
     public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class JimBO {
 
         System.out.println(LINE);
         System.out.println(banner);
-        System.out.println("Hello! I'm JimBO.");
+        System.out.println("Hello! I'm Jimbo.");
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
@@ -43,7 +43,7 @@ public class JimBO {
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.length() > 4 ? command.substring(4).trim() : "";
                     if (description.isEmpty()) {
-                        throw new JimBOException("The description of a todo cannot be empty.");
+                        throw new JimboException("The description of a todo cannot be empty.");
                     }
                     addTask(tasks, new Todo(description));
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
@@ -54,9 +54,9 @@ public class JimBO {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
                     deleteTask(tasks, indexArg);
                 } else {
-                    throw new JimBOException("I'm sorry, but I don't know what that means :-(");
+                    throw new JimboException("I'm sorry, but I don't know what that means :-(");
                 }
-            } catch (JimBOException e) {
+            } catch (JimboException e) {
                 System.out.println(LINE);
                 System.out.println("Oopsie.. " + e.getMessage());
                 System.out.println(LINE);
@@ -71,24 +71,24 @@ public class JimBO {
      * {@code tasks}. {@code commandName} is used to tailor the error message
      * shown when {@code indexArg} is blank, e.g. "mark" or "delete".
      *
-     * @throws JimBOException if the number is missing, not a valid integer,
+     * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
     private static int parseTaskIndex(ArrayList<Task> tasks, String indexArg, String commandName)
-            throws JimBOException {
+            throws JimboException {
         String trimmed = indexArg.trim();
         if (trimmed.isEmpty()) {
-            throw new JimBOException("Please tell me which task number to " + commandName
+            throw new JimboException("Please tell me which task number to " + commandName
                     + ", e.g. \"" + commandName + " 2\".");
         }
         int index;
         try {
             index = Integer.parseInt(trimmed) - 1;
         } catch (NumberFormatException e) {
-            throw new JimBOException("\"" + trimmed + "\" is not a valid task number.");
+            throw new JimboException("\"" + trimmed + "\" is not a valid task number.");
         }
         if (index < 0 || index >= tasks.size()) {
-            throw new JimBOException("Task number " + (index + 1) + " doesn't exist. "
+            throw new JimboException("Task number " + (index + 1) + " doesn't exist. "
                     + "You currently have " + tasks.size() + " task(s) in the list.");
         }
         return index;
@@ -98,10 +98,10 @@ public class JimBO {
      * Marks or unmarks the task identified by {@code indexArg} and prints
      * the standard confirmation message.
      *
-     * @throws JimBOException if the number is missing, not a valid integer,
+     * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, DoneStatus status) throws JimBOException {
+    private static void setTaskDone(ArrayList<Task> tasks, String indexArg, DoneStatus status) throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, status == DoneStatus.DONE ? "mark" : "unmark");
         Task task = tasks.get(index);
         if (status == DoneStatus.DONE) {
@@ -119,21 +119,21 @@ public class JimBO {
      * Parses {@code rest} (the text after the "deadline" keyword) into a
      * description and a "/by" time, and adds the resulting task.
      *
-     * @throws JimBOException if the description or the "/by" time is missing.
+     * @throws JimboException if the description or the "/by" time is missing.
      */
-    private static void addDeadline(ArrayList<Task> tasks, String rest) throws JimBOException {
+    private static void addDeadline(ArrayList<Task> tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimBOException("The description of a deadline cannot be empty.");
+            throw new JimboException("The description of a deadline cannot be empty.");
         }
         String[] parts = rest.split(" /by ", 2);
         if (parts.length < 2) {
-            throw new JimBOException("A deadline needs a \"/by\" time, e.g. "
+            throw new JimboException("A deadline needs a \"/by\" time, e.g. "
                     + "\"deadline return book /by Sunday\".");
         }
         String description = parts[0].trim();
         String by = parts[1].trim();
         if (description.isEmpty()) {
-            throw new JimBOException("The description of a deadline cannot be empty.");
+            throw new JimboException("The description of a deadline cannot be empty.");
         }
 
         addTask(tasks, new Deadline(description, by));
@@ -144,34 +144,34 @@ public class JimBO {
      * description, a "/from" time and a "/to" time, and adds the resulting
      * task.
      *
-     * @throws JimBOException if the description, the "/from" time or the
+     * @throws JimboException if the description, the "/from" time or the
      *                        "/to" time is missing.
      */
-    private static void addEvent(ArrayList<Task> tasks, String rest) throws JimBOException {
+    private static void addEvent(ArrayList<Task> tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimBOException("The description of an event cannot be empty.");
+            throw new JimboException("The description of an event cannot be empty.");
         }
         String[] parts = rest.split(" /from ", 2);
         if (parts.length < 2) {
-            throw new JimBOException("An event needs a \"/from\" and \"/to\" time, e.g. "
+            throw new JimboException("An event needs a \"/from\" and \"/to\" time, e.g. "
                     + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
         }
         String description = parts[0].trim();
         if (description.isEmpty()) {
-            throw new JimBOException("The description of an event cannot be empty.");
+            throw new JimboException("The description of an event cannot be empty.");
         }
         String[] timeParts = parts[1].split(" /to ", 2);
         if (timeParts.length < 2) {
-            throw new JimBOException("An event needs a \"/to\" time, e.g. "
+            throw new JimboException("An event needs a \"/to\" time, e.g. "
                     + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
         }
         String from = timeParts[0].trim();
         String to = timeParts[1].trim();
         if (from.isEmpty()) {
-            throw new JimBOException("Please specify a start time for the event after \"/from\".");
+            throw new JimboException("Please specify a start time for the event after \"/from\".");
         }
         if (to.isEmpty()) {
-            throw new JimBOException("Please specify an end time for the event after \"/to\".");
+            throw new JimboException("Please specify an end time for the event after \"/to\".");
         }
         addTask(tasks, new Event(description, from, to));
     }
@@ -180,10 +180,10 @@ public class JimBO {
      * Removes the task identified by {@code indexArg} from the list and
      * prints the standard "Noted. I've removed this task" confirmation.
      *
-     * @throws JimBOException if the number is missing, not a valid integer,
+     * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void deleteTask(ArrayList<Task> tasks, String indexArg) throws JimBOException {
+    private static void deleteTask(ArrayList<Task> tasks, String indexArg) throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, "delete");
         Task task = tasks.remove(index);
         System.out.println("Noted. I've removed this task:");

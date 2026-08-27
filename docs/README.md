@@ -1,4 +1,4 @@
-# JimBO User Guide
+# Jimbo User Guide
 
 // Product screenshot goes here
 

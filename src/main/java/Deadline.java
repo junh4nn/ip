@@ -37,6 +37,7 @@ public class Deadline extends Task {
 
     @Override
     public String toSaveFormat() {
-        return "D | " + (status == DoneStatus.DONE ? 1 : 0) + " | " + description + " | " + by;
+        return "D | " + (status == DoneStatus.DONE ? 1 : 0) + " | " + description + " | "
+                + by.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

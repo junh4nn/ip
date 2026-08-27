@@ -11,4 +11,9 @@ public class Todo extends Task {
     public String getTypeIcon() {
         return "T";
     }
+
+    @Override
+    public String toSaveFormat() {
+        return "T | " + (status == DoneStatus.DONE ? 1 : 0) + " | " + description;
+    }
 }

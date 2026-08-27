@@ -26,6 +26,15 @@ public abstract class Task {
      */
     public abstract String getTypeIcon();
 
+    /**
+     * Returns this task's representation as a single line in the save file,
+     * e.g. {@code "T | 1 | read book"}. Each concrete subclass is
+     * responsible for including its own type-specific fields (such as a
+     * deadline's "by" date), so that adding a new task type in future does
+     * not require changes to any shared save/load logic.
+     */
+    public abstract String toSaveFormat();
+
     public void markAsDone() {
         this.status = DoneStatus.DONE;
     }

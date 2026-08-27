@@ -1,13 +1,22 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task that needs to be done before a specific date/time,
  * e.g. "submit report by 11/10/2019 5pm".
  */
 public class Deadline extends Task {
-    protected String by;
+    /**
+     * Format accepted for the "by" date/time when typed by the user in a
+     * command, e.g. "2/12/2019 1800".
+     */
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+
+    protected LocalDateTime by;
 
     public Deadline(String description, String by) {
         super(description);
-        this.by = by;
+        this.by = LocalDateTime.parse(by, INPUT_FORMAT);
     }
 
     @Override

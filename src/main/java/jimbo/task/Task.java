@@ -1,3 +1,5 @@
+package jimbo.task;
+
 /**
  * Represents a task with a description and a done/not-done status.
  * This is an abstract base class: concrete task types (e.g. Todo, Deadline,

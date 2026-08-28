@@ -1,3 +1,12 @@
+package jimbo.parser;
+
+import jimbo.exception.JimboException;
+import jimbo.task.Deadline;
+import jimbo.task.Event;
+import jimbo.task.Task;
+import jimbo.task.TaskList;
+import jimbo.task.Todo;
+
 /**
  * Makes sense of raw user input: turns the text typed after a command word
  * (e.g. "todo", "deadline", "event") into a {@link Task}, and turns a task

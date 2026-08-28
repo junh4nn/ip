@@ -1,3 +1,5 @@
+package jimbo.exception;
+
 /**
  * Signals that the user entered an invalid command or argument, e.g. a
  * missing task description or a task number that does not exist.

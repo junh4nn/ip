@@ -1,3 +1,9 @@
+package jimbo.ui;
+
+import jimbo.exception.JimboException;
+import jimbo.task.Task;
+import jimbo.task.TaskList;
+
 /**
  * Handles all interaction with the user: printing the welcome/goodbye
  * messages, the task list, confirmation messages for task operations, and

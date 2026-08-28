@@ -72,6 +72,10 @@ public class Jimbo {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
                     int index = parser.parseTaskIndex(tasks, indexArg, "delete");
                     deleteTask(index);
+                } else if (command.equals("find") || command.startsWith("find ")) {
+                    String rest = command.length() > 4 ? command.substring(4).trim() : "";
+                    String keyword = parser.parseFind(rest);
+                    ui.showMatchingTasks(tasks.find(keyword));
                 } else {
                     throw new JimboException("I'm sorry, but I don't know what that means :-(");
                 }

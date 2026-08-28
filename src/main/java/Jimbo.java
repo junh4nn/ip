@@ -9,6 +9,7 @@ public class Jimbo {
 
         Storage storage = new Storage(FILE_PATH);
         TaskList tasks = new TaskList(storage.load());
+        Parser parser = new Parser();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -21,23 +22,25 @@ public class Jimbo {
                     ui.showTaskList(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     String indexArg = command.length() > 4 ? command.substring(4) : "";
-                    setTaskDone(ui, storage, tasks, indexArg, DoneStatus.DONE);
+                    int index = parser.parseTaskIndex(tasks, indexArg, "mark");
+                    setTaskDone(ui, storage, tasks, index, DoneStatus.DONE);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
-                    setTaskDone(ui, storage, tasks, indexArg, DoneStatus.NOT_DONE);
+                    int index = parser.parseTaskIndex(tasks, indexArg, "unmark");
+                    setTaskDone(ui, storage, tasks, index, DoneStatus.NOT_DONE);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    String description = command.length() > 4 ? command.substring(4).trim() : "";
-                    if (description.isEmpty()) {
-                        throw new JimboException("The description of a todo cannot be empty.");
-                    }
-                    addTask(ui, storage, tasks, new Todo(description));
+                    String rest = command.length() > 4 ? command.substring(4).trim() : "";
+                    addTask(ui, storage, tasks, parser.parseTodo(rest));
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    addDeadline(ui, storage, tasks, command.length() > 8 ? command.substring(8).trim() : "");
+                    String rest = command.length() > 8 ? command.substring(8).trim() : "";
+                    addTask(ui, storage, tasks, parser.parseDeadline(rest));
                 } else if (command.equals("event") || command.startsWith("event ")) {
-                    addEvent(ui, storage, tasks, command.length() > 5 ? command.substring(5).trim() : "");
+                    String rest = command.length() > 5 ? command.substring(5).trim() : "";
+                    addTask(ui, storage, tasks, parser.parseEvent(rest));
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
-                    deleteTask(ui, storage, tasks, indexArg);
+                    int index = parser.parseTaskIndex(tasks, indexArg, "delete");
+                    deleteTask(ui, storage, tasks, index);
                 } else {
                     throw new JimboException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -49,44 +52,10 @@ public class Jimbo {
     }
 
     /**
-     * Parses {@code indexArg} (a 1-based task number, as typed by the user,
-     * possibly with surrounding whitespace) into a valid 0-based index into
-     * {@code tasks}. {@code commandName} is used to tailor the error message
-     * shown when {@code indexArg} is blank, e.g. "mark" or "delete".
-     *
-     * @throws JimboException if the number is missing, not a valid integer,
-     *                        or does not correspond to a task in the list.
+     * Marks or unmarks the task at {@code index} and prints the standard
+     * confirmation message.
      */
-    private static int parseTaskIndex(TaskList tasks, String indexArg, String commandName)
-            throws JimboException {
-        String trimmed = indexArg.trim();
-        if (trimmed.isEmpty()) {
-            throw new JimboException("Please tell me which task number to " + commandName
-                    + ", e.g. \"" + commandName + " 2\".");
-        }
-        int index;
-        try {
-            index = Integer.parseInt(trimmed) - 1;
-        } catch (NumberFormatException e) {
-            throw new JimboException("\"" + trimmed + "\" is not a valid task number.");
-        }
-        if (index < 0 || index >= tasks.size()) {
-            throw new JimboException("Task number " + (index + 1) + " doesn't exist. "
-                    + "You currently have " + tasks.size() + " task(s) in the list.");
-        }
-        return index;
-    }
-
-    /**
-     * Marks or unmarks the task identified by {@code indexArg} and prints
-     * the standard confirmation message.
-     *
-     * @throws JimboException if the number is missing, not a valid integer,
-     *                        or does not correspond to a task in the list.
-     */
-    private static void setTaskDone(Ui ui, Storage storage, TaskList tasks, String indexArg, DoneStatus status)
-            throws JimboException {
-        int index = parseTaskIndex(tasks, indexArg, status == DoneStatus.DONE ? "mark" : "unmark");
+    private static void setTaskDone(Ui ui, Storage storage, TaskList tasks, int index, DoneStatus status) {
         Task task = tasks.get(index);
         if (status == DoneStatus.DONE) {
             task.markAsDone();
@@ -98,75 +67,10 @@ public class Jimbo {
     }
 
     /**
-     * Parses {@code rest} (the text after the "deadline" keyword) into a
-     * description and a "/by" time, and adds the resulting task.
-     *
-     * @throws JimboException if the description or the "/by" time is missing.
+     * Removes the task at {@code index} from the list and prints the
+     * standard "Noted. I've removed this task" confirmation.
      */
-    private static void addDeadline(Ui ui, Storage storage, TaskList tasks, String rest) throws JimboException {
-        if (rest.isEmpty()) {
-            throw new JimboException("The description of a deadline cannot be empty.");
-        }
-        String[] parts = rest.split(" /by ", 2);
-        if (parts.length < 2) {
-            throw new JimboException("A deadline needs a \"/by\" time, e.g. "
-                    + "\"deadline return book /by Sunday\".");
-        }
-        String description = parts[0].trim();
-        String by = parts[1].trim();
-        if (description.isEmpty()) {
-            throw new JimboException("The description of a deadline cannot be empty.");
-        }
-
-        addTask(ui, storage, tasks, new Deadline(description, by));
-    }
-
-    /**
-     * Parses {@code rest} (the text after the "event" keyword) into a
-     * description, a "/from" time and a "/to" time, and adds the resulting
-     * task.
-     *
-     * @throws JimboException if the description, the "/from" time or the
-     *                        "/to" time is missing.
-     */
-    private static void addEvent(Ui ui, Storage storage, TaskList tasks, String rest) throws JimboException {
-        if (rest.isEmpty()) {
-            throw new JimboException("The description of an event cannot be empty.");
-        }
-        String[] parts = rest.split(" /from ", 2);
-        if (parts.length < 2) {
-            throw new JimboException("An event needs a \"/from\" and \"/to\" time, e.g. "
-                    + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
-        }
-        String description = parts[0].trim();
-        if (description.isEmpty()) {
-            throw new JimboException("The description of an event cannot be empty.");
-        }
-        String[] timeParts = parts[1].split(" /to ", 2);
-        if (timeParts.length < 2) {
-            throw new JimboException("An event needs a \"/to\" time, e.g. "
-                    + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
-        }
-        String from = timeParts[0].trim();
-        String to = timeParts[1].trim();
-        if (from.isEmpty()) {
-            throw new JimboException("Please specify a start time for the event after \"/from\".");
-        }
-        if (to.isEmpty()) {
-            throw new JimboException("Please specify an end time for the event after \"/to\".");
-        }
-        addTask(ui, storage, tasks, new Event(description, from, to));
-    }
-
-    /**
-     * Removes the task identified by {@code indexArg} from the list and
-     * prints the standard "Noted. I've removed this task" confirmation.
-     *
-     * @throws JimboException if the number is missing, not a valid integer,
-     *                        or does not correspond to a task in the list.
-     */
-    private static void deleteTask(Ui ui, Storage storage, TaskList tasks, String indexArg) throws JimboException {
-        int index = parseTaskIndex(tasks, indexArg, "delete");
+    private static void deleteTask(Ui ui, Storage storage, TaskList tasks, int index) {
         Task task = tasks.remove(index);
         ui.showTaskDeleted(task, tasks.size());
         storage.save(tasks.getTasks());

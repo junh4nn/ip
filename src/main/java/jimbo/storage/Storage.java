@@ -1,3 +1,5 @@
+package jimbo.storage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,6 +9,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import jimbo.exception.JimboException;
+import jimbo.task.Deadline;
+import jimbo.task.Event;
+import jimbo.task.Task;
+import jimbo.task.Todo;
 
 /**
  * Handles reading the task list from, and writing it to, a save file on

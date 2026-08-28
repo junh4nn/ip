@@ -1,3 +1,5 @@
+package jimbo.task;
+
 /**
  * Represents whether a {@link Task} has been completed.
  * Used instead of a bare {@code boolean} so that call sites (e.g.

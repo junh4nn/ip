@@ -1,4 +1,14 @@
+package jimbo;
+
 import java.util.Scanner;
+
+import jimbo.exception.JimboException;
+import jimbo.parser.Parser;
+import jimbo.storage.Storage;
+import jimbo.task.DoneStatus;
+import jimbo.task.Task;
+import jimbo.task.TaskList;
+import jimbo.ui.Ui;
 
 /**
  * Entry point for the Jimbo task-list chatbot. Wires together the four

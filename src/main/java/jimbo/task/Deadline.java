@@ -1,6 +1,10 @@
+package jimbo.task;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import jimbo.exception.JimboException;
 
 /**
  * Represents a task that needs to be done before a specific date/time,

@@ -38,11 +38,11 @@ public abstract class Task {
     public abstract String toSaveFormat();
 
     public void markAsDone() {
-        this.status = DoneStatus.DONE;
+        status = DoneStatus.DONE;
     }
 
     public void markAsNotDone() {
-        this.status = DoneStatus.NOT_DONE;
+        status = DoneStatus.NOT_DONE;
     }
 
     @Override

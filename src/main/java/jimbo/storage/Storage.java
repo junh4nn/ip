@@ -97,7 +97,7 @@ public class Storage {
         }
 
         String typeIcon = fields[0];
-        boolean isDone = parseDoneDigit(fields[1]);
+        boolean isDone = isDoneDigit(fields[1]);
         String description = fields[2];
 
         Task task;
@@ -139,7 +139,7 @@ public class Storage {
      *
      * @throws JimboException if the digit is anything other than "0" or "1".
      */
-    private boolean parseDoneDigit(String digit) throws JimboException {
+    private boolean isDoneDigit(String digit) throws JimboException {
         if (digit.equals("1")) {
             return true;
         } else if (digit.equals("0")) {

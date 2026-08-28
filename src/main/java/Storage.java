@@ -15,15 +15,23 @@ import java.util.Scanner;
  * {@code toSaveFormat()} method.
  */
 public class Storage {
-    private static final String FILE_PATH = "./data/jimbo.txt";
+    private final String filePath;
+
+    /**
+     * Creates a {@code Storage} that reads from and writes to the save file
+     * at {@code filePath}.
+     */
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
 
     /**
      * Writes {@code tasks} to the save file, one task per line, overwriting
      * any existing content. Creates the parent folder (e.g. {@code ./data})
      * first if it does not already exist.
      */
-    public static void save(ArrayList<Task> tasks) {
-        Path filePath = Path.of(FILE_PATH);
+    public void save(ArrayList<Task> tasks) {
+        Path filePath = Path.of(this.filePath);
         try {
             Files.createDirectories(filePath.getParent());
             try (FileWriter writer = new FileWriter(filePath.toFile())) {
@@ -42,9 +50,9 @@ public class Storage {
      * first run. Any line that cannot be parsed is skipped, with a warning
      * printed, rather than aborting the load.
      */
-    public static ArrayList<Task> load() {
+    public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         if (!file.exists()) {
             return tasks;
         }
@@ -74,7 +82,7 @@ public class Storage {
      * @throws JimboException if the line's type letter, field count or
      *                        done-status digit is invalid.
      */
-    private static Task parseLine(String line) throws JimboException {
+    private Task parseLine(String line) throws JimboException {
         String[] fields = line.split(" \\| ");
         if (fields.length < 3) {
             throw new JimboException("Not enough fields.");
@@ -123,7 +131,7 @@ public class Storage {
      *
      * @throws JimboException if the digit is anything other than "0" or "1".
      */
-    private static boolean parseDoneDigit(String digit) throws JimboException {
+    private boolean parseDoneDigit(String digit) throws JimboException {
         if (digit.equals("1")) {
             return true;
         } else if (digit.equals("0")) {

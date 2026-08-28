@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Jimbo {
@@ -6,7 +5,7 @@ public class Jimbo {
         Ui ui = new Ui();
         ui.showWelcome();
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = new TaskList(Storage.load());
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -55,7 +54,7 @@ public class Jimbo {
      * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static int parseTaskIndex(ArrayList<Task> tasks, String indexArg, String commandName)
+    private static int parseTaskIndex(TaskList tasks, String indexArg, String commandName)
             throws JimboException {
         String trimmed = indexArg.trim();
         if (trimmed.isEmpty()) {
@@ -82,7 +81,7 @@ public class Jimbo {
      * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void setTaskDone(Ui ui, ArrayList<Task> tasks, String indexArg, DoneStatus status)
+    private static void setTaskDone(Ui ui, TaskList tasks, String indexArg, DoneStatus status)
             throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, status == DoneStatus.DONE ? "mark" : "unmark");
         Task task = tasks.get(index);
@@ -92,7 +91,7 @@ public class Jimbo {
             task.markAsNotDone();
         }
         ui.showTaskMarked(task, status == DoneStatus.DONE);
-        Storage.save(tasks);
+        Storage.save(tasks.getTasks());
     }
 
     /**
@@ -101,7 +100,7 @@ public class Jimbo {
      *
      * @throws JimboException if the description or the "/by" time is missing.
      */
-    private static void addDeadline(Ui ui, ArrayList<Task> tasks, String rest) throws JimboException {
+    private static void addDeadline(Ui ui, TaskList tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
             throw new JimboException("The description of a deadline cannot be empty.");
         }
@@ -127,7 +126,7 @@ public class Jimbo {
      * @throws JimboException if the description, the "/from" time or the
      *                        "/to" time is missing.
      */
-    private static void addEvent(Ui ui, ArrayList<Task> tasks, String rest) throws JimboException {
+    private static void addEvent(Ui ui, TaskList tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
             throw new JimboException("The description of an event cannot be empty.");
         }
@@ -163,20 +162,20 @@ public class Jimbo {
      * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void deleteTask(Ui ui, ArrayList<Task> tasks, String indexArg) throws JimboException {
+    private static void deleteTask(Ui ui, TaskList tasks, String indexArg) throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, "delete");
         Task task = tasks.remove(index);
         ui.showTaskDeleted(task, tasks.size());
-        Storage.save(tasks);
+        Storage.save(tasks.getTasks());
     }
 
     /**
      * Adds the given task to the list and prints the standard
      * "Got it. I've added this task" confirmation.
      */
-    private static void addTask(Ui ui, ArrayList<Task> tasks, Task task) {
+    private static void addTask(Ui ui, TaskList tasks, Task task) {
         tasks.add(task);
         ui.showTaskAdded(task, tasks.size());
-        Storage.save(tasks);
+        Storage.save(tasks.getTasks());
     }
 }

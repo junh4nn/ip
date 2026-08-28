@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Handles all interaction with the user: printing the welcome/goodbye
  * messages, the task list, confirmation messages for task operations, and
@@ -47,7 +45,7 @@ public class Ui {
     /**
      * Prints the numbered task list, e.g. in response to the "list" command.
      */
-    public void showTaskList(ArrayList<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));

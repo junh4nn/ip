@@ -1,11 +1,14 @@
 import java.util.Scanner;
 
 public class Jimbo {
+    private static final String FILE_PATH = "./data/jimbo.txt";
+
     public static void main(String[] args) {
         Ui ui = new Ui();
         ui.showWelcome();
 
-        TaskList tasks = new TaskList(Storage.load());
+        Storage storage = new Storage(FILE_PATH);
+        TaskList tasks = new TaskList(storage.load());
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -18,23 +21,23 @@ public class Jimbo {
                     ui.showTaskList(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     String indexArg = command.length() > 4 ? command.substring(4) : "";
-                    setTaskDone(ui, tasks, indexArg, DoneStatus.DONE);
+                    setTaskDone(ui, storage, tasks, indexArg, DoneStatus.DONE);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
-                    setTaskDone(ui, tasks, indexArg, DoneStatus.NOT_DONE);
+                    setTaskDone(ui, storage, tasks, indexArg, DoneStatus.NOT_DONE);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.length() > 4 ? command.substring(4).trim() : "";
                     if (description.isEmpty()) {
                         throw new JimboException("The description of a todo cannot be empty.");
                     }
-                    addTask(ui, tasks, new Todo(description));
+                    addTask(ui, storage, tasks, new Todo(description));
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    addDeadline(ui, tasks, command.length() > 8 ? command.substring(8).trim() : "");
+                    addDeadline(ui, storage, tasks, command.length() > 8 ? command.substring(8).trim() : "");
                 } else if (command.equals("event") || command.startsWith("event ")) {
-                    addEvent(ui, tasks, command.length() > 5 ? command.substring(5).trim() : "");
+                    addEvent(ui, storage, tasks, command.length() > 5 ? command.substring(5).trim() : "");
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
-                    deleteTask(ui, tasks, indexArg);
+                    deleteTask(ui, storage, tasks, indexArg);
                 } else {
                     throw new JimboException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -81,7 +84,7 @@ public class Jimbo {
      * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void setTaskDone(Ui ui, TaskList tasks, String indexArg, DoneStatus status)
+    private static void setTaskDone(Ui ui, Storage storage, TaskList tasks, String indexArg, DoneStatus status)
             throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, status == DoneStatus.DONE ? "mark" : "unmark");
         Task task = tasks.get(index);
@@ -91,7 +94,7 @@ public class Jimbo {
             task.markAsNotDone();
         }
         ui.showTaskMarked(task, status == DoneStatus.DONE);
-        Storage.save(tasks.getTasks());
+        storage.save(tasks.getTasks());
     }
 
     /**
@@ -100,7 +103,7 @@ public class Jimbo {
      *
      * @throws JimboException if the description or the "/by" time is missing.
      */
-    private static void addDeadline(Ui ui, TaskList tasks, String rest) throws JimboException {
+    private static void addDeadline(Ui ui, Storage storage, TaskList tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
             throw new JimboException("The description of a deadline cannot be empty.");
         }
@@ -115,7 +118,7 @@ public class Jimbo {
             throw new JimboException("The description of a deadline cannot be empty.");
         }
 
-        addTask(ui, tasks, new Deadline(description, by));
+        addTask(ui, storage, tasks, new Deadline(description, by));
     }
 
     /**
@@ -126,7 +129,7 @@ public class Jimbo {
      * @throws JimboException if the description, the "/from" time or the
      *                        "/to" time is missing.
      */
-    private static void addEvent(Ui ui, TaskList tasks, String rest) throws JimboException {
+    private static void addEvent(Ui ui, Storage storage, TaskList tasks, String rest) throws JimboException {
         if (rest.isEmpty()) {
             throw new JimboException("The description of an event cannot be empty.");
         }
@@ -152,7 +155,7 @@ public class Jimbo {
         if (to.isEmpty()) {
             throw new JimboException("Please specify an end time for the event after \"/to\".");
         }
-        addTask(ui, tasks, new Event(description, from, to));
+        addTask(ui, storage, tasks, new Event(description, from, to));
     }
 
     /**
@@ -162,20 +165,20 @@ public class Jimbo {
      * @throws JimboException if the number is missing, not a valid integer,
      *                        or does not correspond to a task in the list.
      */
-    private static void deleteTask(Ui ui, TaskList tasks, String indexArg) throws JimboException {
+    private static void deleteTask(Ui ui, Storage storage, TaskList tasks, String indexArg) throws JimboException {
         int index = parseTaskIndex(tasks, indexArg, "delete");
         Task task = tasks.remove(index);
         ui.showTaskDeleted(task, tasks.size());
-        Storage.save(tasks.getTasks());
+        storage.save(tasks.getTasks());
     }
 
     /**
      * Adds the given task to the list and prints the standard
      * "Got it. I've added this task" confirmation.
      */
-    private static void addTask(Ui ui, TaskList tasks, Task task) {
+    private static void addTask(Ui ui, Storage storage, TaskList tasks, Task task) {
         tasks.add(task);
         ui.showTaskAdded(task, tasks.size());
-        Storage.save(tasks.getTasks());
+        storage.save(tasks.getTasks());
     }
 }

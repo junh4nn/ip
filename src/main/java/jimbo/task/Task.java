@@ -51,14 +51,14 @@ public abstract class Task {
      * Marks this task as done.
      */
     public void markAsDone() {
-        this.status = DoneStatus.DONE;
+        status = DoneStatus.DONE;
     }
 
     /**
      * Marks this task as not done.
      */
     public void markAsNotDone() {
-        this.status = DoneStatus.NOT_DONE;
+        status = DoneStatus.NOT_DONE;
     }
 
     @Override

@@ -7,6 +7,9 @@ package jimbo.exception;
  * {@link Jimbo#main}, where the message is shown to the user.
  */
 public class JimboException extends Exception {
+    /**
+     * Creates a JimboException with the given user-facing error message.
+     */
     public JimboException(String message) {
         super(message);
     }

@@ -1,15 +1,36 @@
 import java.util.Scanner;
 
+/**
+ * Entry point for the Jimbo task-list chatbot. Wires together the four
+ * collaborators (see {@link Ui}, {@link Storage}, {@link Parser},
+ * {@link TaskList}) and drives the command loop that reads user input,
+ * interprets it, and applies it to the task list.
+ */
 public class Jimbo {
     private static final String FILE_PATH = "./data/jimbo.txt";
 
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        ui.showWelcome();
+    private final Ui ui;
+    private final Storage storage;
+    private final Parser parser;
+    private final TaskList tasks;
 
-        Storage storage = new Storage(FILE_PATH);
-        TaskList tasks = new TaskList(storage.load());
-        Parser parser = new Parser();
+    /**
+     * Creates a Jimbo instance whose task list is loaded from, and saved
+     * to, the save file at {@code filePath}.
+     */
+    public Jimbo(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        parser = new Parser();
+        tasks = new TaskList(storage.load());
+    }
+
+    /**
+     * Shows the welcome message, then reads and handles commands from
+     * standard input until the user types "bye".
+     */
+    public void run() {
+        ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -23,24 +44,24 @@ public class Jimbo {
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     String indexArg = command.length() > 4 ? command.substring(4) : "";
                     int index = parser.parseTaskIndex(tasks, indexArg, "mark");
-                    setTaskDone(ui, storage, tasks, index, DoneStatus.DONE);
+                    setTaskDone(index, DoneStatus.DONE);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
                     int index = parser.parseTaskIndex(tasks, indexArg, "unmark");
-                    setTaskDone(ui, storage, tasks, index, DoneStatus.NOT_DONE);
+                    setTaskDone(index, DoneStatus.NOT_DONE);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String rest = command.length() > 4 ? command.substring(4).trim() : "";
-                    addTask(ui, storage, tasks, parser.parseTodo(rest));
+                    addTask(parser.parseTodo(rest));
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     String rest = command.length() > 8 ? command.substring(8).trim() : "";
-                    addTask(ui, storage, tasks, parser.parseDeadline(rest));
+                    addTask(parser.parseDeadline(rest));
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     String rest = command.length() > 5 ? command.substring(5).trim() : "";
-                    addTask(ui, storage, tasks, parser.parseEvent(rest));
+                    addTask(parser.parseEvent(rest));
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     String indexArg = command.length() > 6 ? command.substring(6) : "";
                     int index = parser.parseTaskIndex(tasks, indexArg, "delete");
-                    deleteTask(ui, storage, tasks, index);
+                    deleteTask(index);
                 } else {
                     throw new JimboException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -55,7 +76,7 @@ public class Jimbo {
      * Marks or unmarks the task at {@code index} and prints the standard
      * confirmation message.
      */
-    private static void setTaskDone(Ui ui, Storage storage, TaskList tasks, int index, DoneStatus status) {
+    private void setTaskDone(int index, DoneStatus status) {
         Task task = tasks.get(index);
         if (status == DoneStatus.DONE) {
             task.markAsDone();
@@ -70,7 +91,7 @@ public class Jimbo {
      * Removes the task at {@code index} from the list and prints the
      * standard "Noted. I've removed this task" confirmation.
      */
-    private static void deleteTask(Ui ui, Storage storage, TaskList tasks, int index) {
+    private void deleteTask(int index) {
         Task task = tasks.remove(index);
         ui.showTaskDeleted(task, tasks.size());
         storage.save(tasks.getTasks());
@@ -80,9 +101,13 @@ public class Jimbo {
      * Adds the given task to the list and prints the standard
      * "Got it. I've added this task" confirmation.
      */
-    private static void addTask(Ui ui, Storage storage, TaskList tasks, Task task) {
+    private void addTask(Task task) {
         tasks.add(task);
         ui.showTaskAdded(task, tasks.size());
         storage.save(tasks.getTasks());
+    }
+
+    public static void main(String[] args) {
+        new Jimbo(FILE_PATH).run();
     }
 }

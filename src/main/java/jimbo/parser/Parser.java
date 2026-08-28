@@ -88,6 +88,19 @@ public class Parser {
     }
 
     /**
+     * Parses {@code rest} (the text after the "find" keyword) into the
+     * keyword to search for.
+     *
+     * @throws JimboException if the keyword is empty.
+     */
+    public String parseFind(String rest) throws JimboException {
+        if (rest.isEmpty()) {
+            throw new JimboException("Please tell me what keyword to search for, e.g. \"find book\".");
+        }
+        return rest;
+    }
+
+    /**
      * Parses {@code indexArg} (a 1-based task number, as typed by the user,
      * possibly with surrounding whitespace) into a valid 0-based index into
      * {@code tasks}. {@code commandName} is used to tailor the error message

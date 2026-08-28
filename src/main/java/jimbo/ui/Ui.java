@@ -1,5 +1,7 @@
 package jimbo.ui;
 
+import java.util.ArrayList;
+
 import jimbo.exception.JimboException;
 import jimbo.task.Task;
 import jimbo.task.TaskList;
@@ -92,6 +94,22 @@ public class Ui {
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
+        showLine();
+    }
+
+    /**
+     * Prints the numbered list of tasks matching a search keyword, e.g. in
+     * response to the "find" command.
+     */
+    public void showMatchingTasks(ArrayList<Task> matches) {
+        if (matches.isEmpty()) {
+            System.out.println("I couldn't find any matching tasks in your list.");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matches.size(); i++) {
+                System.out.println((i + 1) + "." + matches.get(i));
+            }
+        }
         showLine();
     }
 

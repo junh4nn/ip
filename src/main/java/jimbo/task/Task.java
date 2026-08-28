@@ -9,15 +9,25 @@ public abstract class Task {
     protected String description;
     protected DoneStatus status;
 
+    /**
+     * Creates a task with the given description, initially not done.
+     */
     public Task(String description) {
         this.description = description;
         this.status = DoneStatus.NOT_DONE;
     }
 
+    /**
+     * Returns this task's description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns the single-character icon shown next to a task to indicate
+     * whether it is done ("X") or not done (" ").
+     */
     public String getStatusIcon() {
         return (status == DoneStatus.DONE ? "X" : " "); // mark done task with X
     }
@@ -37,10 +47,16 @@ public abstract class Task {
      */
     public abstract String toSaveFormat();
 
+    /**
+     * Marks this task as done.
+     */
     public void markAsDone() {
         this.status = DoneStatus.DONE;
     }
 
+    /**
+     * Marks this task as not done.
+     */
     public void markAsNotDone() {
         this.status = DoneStatus.NOT_DONE;
     }

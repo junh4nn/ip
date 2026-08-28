@@ -5,6 +5,9 @@ package jimbo.task;
  * e.g. "borrow book".
  */
 public class Todo extends Task {
+    /**
+     * Creates a todo with the given description.
+     */
     public Todo(String description) {
         super(description);
     }

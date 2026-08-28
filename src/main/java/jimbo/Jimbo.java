@@ -117,6 +117,9 @@ public class Jimbo {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Starts Jimbo, loading and saving tasks at {@link #FILE_PATH}.
+     */
     public static void main(String[] args) {
         new Jimbo(FILE_PATH).run();
     }

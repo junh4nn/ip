@@ -1,0 +1,16 @@
+.label {
+    -fx-background-color: linear-gradient(to bottom right, #4a90e2, #357abd);
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 13px;
+}
+
+.reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #c8c8c8);
+    -fx-text-fill: #202020;
+}
+
+#displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0, 0, 2);
+}

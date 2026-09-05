@@ -17,7 +17,7 @@ import jimbo.ui.Ui;
  * interprets it, and applies it to the task list.
  */
 public class Jimbo {
-    private static final String FILE_PATH = "./data/jimbo.txt";
+    public static final String FILE_PATH = "./data/jimbo.txt";
 
     private final Ui ui;
     private final Storage storage;

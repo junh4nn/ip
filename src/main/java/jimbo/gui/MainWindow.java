@@ -30,7 +30,8 @@ public class MainWindow {
 
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        scrollPane.setFitToWidth(true);
+        dialogContainer.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
     }
 
     /**

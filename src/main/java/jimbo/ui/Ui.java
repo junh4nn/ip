@@ -51,7 +51,7 @@ public class Ui {
     public String showTaskList(TaskList tasks) {
         StringBuilder sb = new StringBuilder("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            sb.append("\n").append(i + 1).append(".").append(tasks.get(i));
+            sb.append("\n").append(i + 1).append(") ").append(tasks.get(i));
         }
         return sb.toString();
     }
@@ -95,7 +95,7 @@ public class Ui {
         }
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:");
         for (int i = 0; i < matches.size(); i++) {
-            sb.append("\n").append(i + 1).append(".").append(matches.get(i));
+            sb.append("\n").append(i + 1).append(") ").append(matches.get(i));
         }
         return sb.toString();
     }

@@ -128,6 +128,7 @@ public class Storage {
             throw new JimboException("Unknown task type icon: " + typeIcon);
         }
 
+        assert task != null : "task should have been assigned by a case above, or an exception thrown";
         if (isDone) {
             task.markAsDone();
         }

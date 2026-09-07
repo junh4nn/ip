@@ -13,6 +13,9 @@ public abstract class Task {
      * Creates a task with the given description, initially not done.
      */
     public Task(String description) {
+        assert description != null && !description.isEmpty()
+                : "Task description should never be null or empty; Parser is expected to validate this "
+                + "before constructing a Task";
         this.description = description;
         this.status = DoneStatus.NOT_DONE;
     }

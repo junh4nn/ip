@@ -125,6 +125,8 @@ public class Parser {
             throw new JimboException("Task number " + (index + 1) + " doesn't exist. "
                     + "You currently have " + tasks.size() + " task(s) in the list.");
         }
+        assert index >= 0 && index < tasks.size()
+                : "index should be within bounds of tasks whenever this method returns normally";
         return index;
     }
 }

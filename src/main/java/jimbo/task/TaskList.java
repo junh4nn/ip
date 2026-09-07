@@ -37,6 +37,8 @@ public class TaskList {
      * Removes and returns the task at the given 0-based index.
      */
     public Task remove(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "index should already be validated by the caller (e.g. via Parser.parseTaskIndex)";
         return tasks.remove(index);
     }
 
@@ -44,6 +46,8 @@ public class TaskList {
      * Returns the task at the given 0-based index.
      */
     public Task get(int index) {
+        assert index >= 0 && index < tasks.size()
+                : "index should already be validated by the caller (e.g. via Parser.parseTaskIndex)";
         return tasks.get(index);
     }
 

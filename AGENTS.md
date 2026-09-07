@@ -28,6 +28,7 @@ Unless the user says otherwise, assume that you are assisting a student working 
 # Code Quality and Edits
 
 * Follow this coding standard: https://se-education.org/guides/conventions/java/index.html
+* Follow this standard for code quality: https://nus-cs2103-ay2627-s1.github.io/website/se-book-adapted/chapters/codeQuality.html
 * Follow this git convention for commits etc: https://se-education.org/guides/conventions/git.html
 
 * After every code change, explain what was changed and why before moving on. 

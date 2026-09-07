@@ -67,37 +67,42 @@ public class Jimbo {
      */
     public String getResponse(String input) {
         try {
-            if (input.equals("bye")) {
+            String[] tokens = input.split(" ", 2);
+            String commandWord = tokens[0];
+            String args = tokens.length > 1 ? tokens[1].trim() : "";
+
+            switch (commandWord) {
+            case "bye" -> {
                 return ui.showGoodbye();
-            } else if (input.equals("list")) {
+            }
+            case "list" -> {
                 return ui.showTaskList(tasks);
-            } else if (input.equals("mark") || input.startsWith("mark ")) {
-                String indexArg = input.length() > 4 ? input.substring(4) : "";
-                int index = parser.parseTaskIndex(tasks, indexArg, "mark");
+            }
+            case "mark" -> {
+                int index = parser.parseTaskIndex(tasks, args, "mark");
                 return setTaskDone(index, DoneStatus.DONE);
-            } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                String indexArg = input.length() > 6 ? input.substring(6) : "";
-                int index = parser.parseTaskIndex(tasks, indexArg, "unmark");
+            }
+            case "unmark" -> {
+                int index = parser.parseTaskIndex(tasks, args, "unmark");
                 return setTaskDone(index, DoneStatus.NOT_DONE);
-            } else if (input.equals("todo") || input.startsWith("todo ")) {
-                String rest = input.length() > 4 ? input.substring(4).trim() : "";
-                return addTask(parser.parseTodo(rest));
-            } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                String rest = input.length() > 8 ? input.substring(8).trim() : "";
-                return addTask(parser.parseDeadline(rest));
-            } else if (input.equals("event") || input.startsWith("event ")) {
-                String rest = input.length() > 5 ? input.substring(5).trim() : "";
-                return addTask(parser.parseEvent(rest));
-            } else if (input.equals("delete") || input.startsWith("delete ")) {
-                String indexArg = input.length() > 6 ? input.substring(6) : "";
-                int index = parser.parseTaskIndex(tasks, indexArg, "delete");
+            }
+            case "todo" -> {
+                return addTask(parser.parseTodo(args));
+            }
+            case "deadline" -> {
+                return addTask(parser.parseDeadline(args));
+            }
+            case "event" -> {
+                return addTask(parser.parseEvent(args));
+            }
+            case "delete" -> {
+                int index = parser.parseTaskIndex(tasks, args, "delete");
                 return deleteTask(index);
-            } else if (input.equals("find") || input.startsWith("find ")) {
-                String rest = input.length() > 4 ? input.substring(4).trim() : "";
-                String keyword = parser.parseFind(rest);
-                return ui.showMatchingTasks(tasks.find(keyword));
-            } else {
-                throw new JimboException("I'm sorry, but I don't know what that means :-(");
+            }
+            case "find" -> {
+                return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
+            }
+            default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
             }
         } catch (JimboException e) {
             return ui.showError(e.getMessage());

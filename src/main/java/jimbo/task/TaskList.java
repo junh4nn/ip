@@ -1,6 +1,7 @@
 package jimbo.task;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Represents the in-memory list of tasks. Wraps an {@link ArrayList} of
@@ -71,13 +72,9 @@ public class TaskList {
      * (case-insensitive), in their original order.
      */
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matches = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(lowerKeyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

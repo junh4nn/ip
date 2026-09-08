@@ -122,7 +122,11 @@ public class Storage {
                 if (fields.length != 5) {
                     throw new JimboException("Event has wrong number of fields.");
                 }
-                task = new Event(description, fields[3], fields[4]);
+                try {
+                    task = new Event(description, LocalDateTime.parse(fields[3]), LocalDateTime.parse(fields[4]));
+                } catch (DateTimeParseException e) {
+                    throw new JimboException("Invalid event date/time in save file: " + fields[3] + ", " + fields[4]);
+                }
                 break;
             default:
                 throw new JimboException("Unknown task type icon: " + typeIcon);

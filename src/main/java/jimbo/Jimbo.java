@@ -5,7 +5,9 @@ import java.util.Scanner;
 import jimbo.exception.JimboException;
 import jimbo.parser.Parser;
 import jimbo.storage.Storage;
+import jimbo.task.Deadline;
 import jimbo.task.DoneStatus;
+import jimbo.task.Event;
 import jimbo.task.Task;
 import jimbo.task.TaskList;
 import jimbo.ui.Ui;
@@ -99,6 +101,9 @@ public class Jimbo {
                     int index = parser.parseTaskIndex(tasks, args, "delete");
                     return deleteTask(index);
                 }
+                case "update" -> {
+                    return updateTask(args);
+                }
                 case "find" -> {
                     return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
                 }
@@ -132,6 +137,63 @@ public class Jimbo {
         Task task = tasks.remove(index);
         storage.save(tasks.getTasks());
         return ui.showTaskDeleted(task, tasks.size());
+    }
+
+    /**
+     * Updates a single field of the task named in {@code args}, which must
+     * be of the form "{@code <index> /<field> <new value>}", e.g.
+     * "{@code 2 /by 3/12/2019 1800}". Only one field can be updated per
+     * command; {@code /desc} applies to any task type, while {@code /by}
+     * (Deadline) and {@code /from}/{@code /to} (Event) are rejected if the
+     * task at {@code index} is not of the matching type.
+     *
+     * @throws JimboException if the index is missing/invalid, the field
+     *                        flag or new value is missing, the flag is not
+     *                        recognised, the flag does not apply to the
+     *                        task's type, or the new value is invalid for
+     *                        that field (e.g. an unparsable date/time).
+     */
+    private String updateTask(String args) throws JimboException {
+        String[] indexAndRest = args.split(" ", 2);
+        int index = parser.parseTaskIndex(tasks, indexAndRest[0], "update");
+        if (indexAndRest.length < 2 || indexAndRest[1].trim().isEmpty()) {
+            throw new JimboException("Please tell me what to update, e.g. \"update 2 /by 3/12/2019 1800\".");
+        }
+
+        String[] flagAndValue = indexAndRest[1].trim().split(" ", 2);
+        String flag = flagAndValue[0];
+        String value = flagAndValue.length > 1 ? flagAndValue[1].trim() : "";
+        if (value.isEmpty()) {
+            throw new JimboException("Please provide a new value after \"" + flag + "\".");
+        }
+
+        Task task = tasks.get(index);
+        switch (flag) {
+            case "/desc" -> task.setDescription(value);
+            case "/by" -> {
+                if (!(task instanceof Deadline deadline)) {
+                    throw new JimboException("Only a deadline has a \"/by\" time to update.");
+                }
+                deadline.setBy(value);
+            }
+            case "/from" -> {
+                if (!(task instanceof Event event)) {
+                    throw new JimboException("Only an event has a \"/from\" time to update.");
+                }
+                event.setFrom(value);
+            }
+            case "/to" -> {
+                if (!(task instanceof Event event)) {
+                    throw new JimboException("Only an event has a \"/to\" time to update.");
+                }
+                event.setTo(value);
+            }
+            default -> throw new JimboException("\"" + flag + "\" is not something I can update. "
+                    + "Try \"/desc\", \"/by\", \"/from\", or \"/to\".");
+        }
+
+        storage.save(tasks.getTasks());
+        return ui.showTaskUpdated(task);
     }
 
     /**

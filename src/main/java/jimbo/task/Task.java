@@ -28,6 +28,15 @@ public abstract class Task {
     }
 
     /**
+     * Updates this task's description, e.g. in response to an "update"
+     * command. Leaves every other field (status, and any type-specific
+     * fields on a subclass) unchanged.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
      * Returns the single-character icon shown next to a task to indicate
      * whether it is done ("X") or not done (" ").
      */

@@ -31,12 +31,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) throws JimboException {
         super(description);
-        try {
-            this.by = LocalDateTime.parse(by, INPUT_FORMAT);
-        } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid deadline date/time \"" + by
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
-        }
+        setBy(by);
     }
 
     /**
@@ -46,6 +41,22 @@ public class Deadline extends Task {
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
+    }
+
+    /**
+     * Updates this deadline's "by" date/time, e.g. in response to an
+     * "update" command.
+     *
+     * @throws JimboException if {@code by} does not match the expected
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     */
+    public void setBy(String by) throws JimboException {
+        try {
+            this.by = LocalDateTime.parse(by, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new JimboException("Invalid deadline date/time \"" + by
+                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+        }
     }
 
     @Override

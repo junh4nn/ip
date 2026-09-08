@@ -36,18 +36,8 @@ public class Event extends Task {
      */
     public Event(String description, String from, String to) throws JimboException {
         super(description);
-        try {
-            this.from = LocalDateTime.parse(from, INPUT_FORMAT);
-        } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid event start date/time \"" + from
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
-        }
-        try {
-            this.to = LocalDateTime.parse(to, INPUT_FORMAT);
-        } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid event end date/time \"" + to
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
-        }
+        setFrom(from);
+        setTo(to);
     }
 
     /**
@@ -58,6 +48,38 @@ public class Event extends Task {
         super(description);
         this.from = from;
         this.to = to;
+    }
+
+    /**
+     * Updates this event's "from" (start) date/time, e.g. in response to an
+     * "update" command.
+     *
+     * @throws JimboException if {@code from} does not match the expected
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     */
+    public void setFrom(String from) throws JimboException {
+        try {
+            this.from = LocalDateTime.parse(from, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new JimboException("Invalid event start date/time \"" + from
+                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+        }
+    }
+
+    /**
+     * Updates this event's "to" (end) date/time, e.g. in response to an
+     * "update" command.
+     *
+     * @throws JimboException if {@code to} does not match the expected
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     */
+    public void setTo(String to) throws JimboException {
+        try {
+            this.to = LocalDateTime.parse(to, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new JimboException("Invalid event end date/time \"" + to
+                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+        }
     }
 
     @Override

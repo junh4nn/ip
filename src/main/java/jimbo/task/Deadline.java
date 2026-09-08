@@ -3,6 +3,7 @@ package jimbo.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import jimbo.exception.JimboException;
 
@@ -19,9 +20,12 @@ public class Deadline extends Task {
 
     /**
      * Format used to display the "by" date/time back to the user,
-     * e.g. "Dec 02 2019, 6:00PM".
+     * e.g. "Dec 02 2019, 6:00PM". Pinned to {@link Locale#US} so the month
+     * name and AM/PM marker render the same way regardless of the machine's
+     * default locale (some locales render the AM/PM marker in lowercase).
      */
-    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+    private static final DateTimeFormatter DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma", Locale.US);
 
     protected LocalDateTime by;
 
@@ -31,12 +35,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) throws JimboException {
         super(description);
-        try {
-            this.by = LocalDateTime.parse(by, INPUT_FORMAT);
-        } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid deadline date/time \"" + by
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
-        }
+        setBy(by);
     }
 
     /**
@@ -46,6 +45,22 @@ public class Deadline extends Task {
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
+    }
+
+    /**
+     * Updates this deadline's "by" date/time, e.g. in response to an
+     * "update" command.
+     *
+     * @throws JimboException if {@code by} does not match the expected
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     */
+    public void setBy(String by) throws JimboException {
+        try {
+            this.by = LocalDateTime.parse(by, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new JimboException("Invalid deadline date/time \"" + by
+                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+        }
     }
 
     @Override

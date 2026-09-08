@@ -86,6 +86,13 @@ public class Ui {
     }
 
     /**
+     * Returns the confirmation shown after a task's details are updated.
+     */
+    public String showTaskUpdated(Task task) {
+        return "Got it. I've updated this task:\n  " + task;
+    }
+
+    /**
      * Returns the numbered list of tasks matching a search keyword, e.g. in
      * response to the "find" command.
      */

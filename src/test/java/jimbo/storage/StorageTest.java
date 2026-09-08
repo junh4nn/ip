@@ -34,7 +34,7 @@ public class StorageTest {
         Todo todo = new Todo("read book");
         Deadline deadline = new Deadline("submit report", "2/12/2019 1800");
         deadline.markAsDone();
-        Event event = new Event("team meeting", "Mon 2pm", "Mon 4pm");
+        Event event = new Event("team meeting", "3/12/2019 1400", "3/12/2019 1600");
 
         ArrayList<Task> original = new ArrayList<>();
         original.add(todo);

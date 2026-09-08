@@ -77,11 +77,11 @@ public class ParserTest {
 
     @Test
     public void parseEvent_validInput_returnsEvent() throws JimboException {
-        Task task = parser.parseEvent("project meeting /from Mon 2pm /to Mon 4pm");
+        Task task = parser.parseEvent("project meeting /from 2/12/2019 1400 /to 2/12/2019 1600");
 
         assertTrue(task instanceof Event);
         assertEquals("project meeting", task.getDescription());
-        assertEquals("E | 0 | project meeting | Mon 2pm | Mon 4pm", task.toSaveFormat());
+        assertEquals("E | 0 | project meeting | 2019-12-02T14:00:00 | 2019-12-02T16:00:00", task.toSaveFormat());
     }
 
     @Test

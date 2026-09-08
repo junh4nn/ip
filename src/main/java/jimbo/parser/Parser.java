@@ -65,7 +65,7 @@ public class Parser {
         String[] parts = rest.split(" /from ", 2);
         if (parts.length < 2) {
             throw new JimboException("An event needs a \"/from\" and \"/to\" time, e.g. "
-                    + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
+                    + "\"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         String description = parts[0].trim();
         if (description.isEmpty()) {
@@ -74,7 +74,7 @@ public class Parser {
         String[] timeParts = parts[1].split(" /to ", 2);
         if (timeParts.length < 2) {
             throw new JimboException("An event needs a \"/to\" time, e.g. "
-                    + "\"event project meeting /from Mon 2pm /to Mon 4pm\".");
+                    + "\"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         String from = timeParts[0].trim();
         String to = timeParts[1].trim();

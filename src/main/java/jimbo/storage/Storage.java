@@ -102,30 +102,30 @@ public class Storage {
 
         Task task;
         switch (typeIcon) {
-        case "T":
-            if (fields.length != 3) {
-                throw new JimboException("Todo has wrong number of fields.");
-            }
-            task = new Todo(description);
-            break;
-        case "D":
-            if (fields.length != 4) {
-                throw new JimboException("Deadline has wrong number of fields.");
-            }
-            try {
-                task = new Deadline(description, LocalDateTime.parse(fields[3]));
-            } catch (DateTimeParseException e) {
-                throw new JimboException("Invalid deadline date/time in save file: " + fields[3]);
-            }
-            break;
-        case "E":
-            if (fields.length != 5) {
-                throw new JimboException("Event has wrong number of fields.");
-            }
-            task = new Event(description, fields[3], fields[4]);
-            break;
-        default:
-            throw new JimboException("Unknown task type icon: " + typeIcon);
+            case "T":
+                if (fields.length != 3) {
+                    throw new JimboException("Todo has wrong number of fields.");
+                }
+                task = new Todo(description);
+                break;
+            case "D":
+                if (fields.length != 4) {
+                    throw new JimboException("Deadline has wrong number of fields.");
+                }
+                try {
+                    task = new Deadline(description, LocalDateTime.parse(fields[3]));
+                } catch (DateTimeParseException e) {
+                    throw new JimboException("Invalid deadline date/time in save file: " + fields[3]);
+                }
+                break;
+            case "E":
+                if (fields.length != 5) {
+                    throw new JimboException("Event has wrong number of fields.");
+                }
+                task = new Event(description, fields[3], fields[4]);
+                break;
+            default:
+                throw new JimboException("Unknown task type icon: " + typeIcon);
         }
 
         assert task != null : "task should have been assigned by a case above, or an exception thrown";

@@ -49,8 +49,7 @@ public class DeadlineTest {
 
     @Test
     public void deadline_invalidByTime_exceptionMessageIncludesOffendingValue() {
-        JimboException exception = assertThrows(JimboException.class,
-                () -> new Deadline("submit report", "tomorrow"));
+        JimboException exception = assertThrows(JimboException.class, () -> new Deadline("submit report", "tomorrow"));
 
         assertTrue(exception.getMessage().contains("tomorrow"));
     }

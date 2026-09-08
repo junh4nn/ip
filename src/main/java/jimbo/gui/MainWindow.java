@@ -1,13 +1,12 @@
 package jimbo.gui;
 
-import jimbo.Jimbo;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import jimbo.Jimbo;
 
 /**
  * Controller for the main chat window: holds the conversation history and
@@ -28,6 +27,11 @@ public class MainWindow {
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
     private final Image jimboImage = new Image(this.getClass().getResourceAsStream("/images/Jimbo.jpeg"));
 
+    /**
+     * Called by the FXML loader after all {@code @FXML} fields are injected.
+     * Makes the scroll pane track the container's width and auto-scrolls it
+     * to the bottom whenever a new dialog box is added.
+     */
     @FXML
     public void initialize() {
         scrollPane.setFitToWidth(true);

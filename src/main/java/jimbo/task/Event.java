@@ -3,6 +3,7 @@ package jimbo.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import jimbo.exception.JimboException;
 
@@ -22,9 +23,12 @@ public class Event extends Task {
 
     /**
      * Format used to display the "from"/"to" date/time back to the user,
-     * e.g. "Dec 02 2019, 6:00PM".
+     * e.g. "Dec 02 2019, 6:00PM". Pinned to {@link Locale#US} so the month
+     * name and AM/PM marker render the same way regardless of the machine's
+     * default locale (some locales render the AM/PM marker in lowercase).
      */
-    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+    private static final DateTimeFormatter DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma", Locale.US);
 
     protected LocalDateTime from;
     protected LocalDateTime to;

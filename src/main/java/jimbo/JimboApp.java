@@ -2,13 +2,12 @@ package jimbo;
 
 import java.io.IOException;
 
-import jimbo.gui.MainWindow;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import jimbo.gui.MainWindow;
 
 /**
  * JavaFX application class for Jimbo's GUI. Loads the main chat window from

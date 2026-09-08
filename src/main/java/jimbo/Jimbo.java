@@ -72,37 +72,37 @@ public class Jimbo {
             String args = tokens.length > 1 ? tokens[1].trim() : "";
 
             switch (commandWord) {
-            case "bye" -> {
-                return ui.showGoodbye();
-            }
-            case "list" -> {
-                return ui.showTaskList(tasks);
-            }
-            case "mark" -> {
-                int index = parser.parseTaskIndex(tasks, args, "mark");
-                return setTaskDone(index, DoneStatus.DONE);
-            }
-            case "unmark" -> {
-                int index = parser.parseTaskIndex(tasks, args, "unmark");
-                return setTaskDone(index, DoneStatus.NOT_DONE);
-            }
-            case "todo" -> {
-                return addTask(parser.parseTodo(args));
-            }
-            case "deadline" -> {
-                return addTask(parser.parseDeadline(args));
-            }
-            case "event" -> {
-                return addTask(parser.parseEvent(args));
-            }
-            case "delete" -> {
-                int index = parser.parseTaskIndex(tasks, args, "delete");
-                return deleteTask(index);
-            }
-            case "find" -> {
-                return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
-            }
-            default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
+                case "bye" -> {
+                    return ui.showGoodbye();
+                }
+                case "list" -> {
+                    return ui.showTaskList(tasks);
+                }
+                case "mark" -> {
+                    int index = parser.parseTaskIndex(tasks, args, "mark");
+                    return setTaskDone(index, DoneStatus.DONE);
+                }
+                case "unmark" -> {
+                    int index = parser.parseTaskIndex(tasks, args, "unmark");
+                    return setTaskDone(index, DoneStatus.NOT_DONE);
+                }
+                case "todo" -> {
+                    return addTask(parser.parseTodo(args));
+                }
+                case "deadline" -> {
+                    return addTask(parser.parseDeadline(args));
+                }
+                case "event" -> {
+                    return addTask(parser.parseEvent(args));
+                }
+                case "delete" -> {
+                    int index = parser.parseTaskIndex(tasks, args, "delete");
+                    return deleteTask(index);
+                }
+                case "find" -> {
+                    return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
+                }
+                default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
             }
         } catch (JimboException e) {
             return ui.showError(e.getMessage());

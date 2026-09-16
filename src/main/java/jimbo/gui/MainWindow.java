@@ -53,10 +53,10 @@ public class MainWindow {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = jimbo.getResponse(input);
+        Jimbo.Response response = jimbo.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getJimboDialog(response, jimboImage)
+                DialogBox.getJimboDialog(response.text(), jimboImage, response.isError())
         );
         userInput.clear();
     }

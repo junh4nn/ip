@@ -5,23 +5,23 @@
 }
 
 .text-field {
-    -fx-background-color: #f0f0f0;
+    -fx-background-color: #fdf6e3;
     -fx-font-size: 14px;
 }
 
 .button {
-    -fx-background-color: #4a4a4a;
+    -fx-background-color: #6ca41d;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-background-radius: 5;
 }
 
 .button:hover {
-    -fx-background-color: #5a5a5a;
+    -fx-background-color: #97d300;
 }
 
 .button:pressed {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #3f6509;
 }
 
 .scroll-pane, .scroll-pane .viewport {
@@ -34,7 +34,7 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #6a6a6a;
+    -fx-background-color: #6ca41d;
     -fx-background-radius: 5;
 }
 

@@ -27,10 +27,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("todo read book");
 
-        String response = jimbo.getResponse("update 1 /desc read a different book");
+        String response = jimbo.getResponse("update 1 /desc read a different book").text();
 
         assertTrue(response.contains("read a different book"));
-        assertTrue(jimbo.getResponse("list").contains("read a different book"));
+        assertTrue(jimbo.getResponse("list").text().contains("read a different book"));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("deadline submit report /by 2/12/2019 1800");
 
-        String response = jimbo.getResponse("update 1 /by 3/12/2019 0900");
+        String response = jimbo.getResponse("update 1 /by 3/12/2019 0900").text();
 
         assertTrue(response.contains("submit report"));
         assertTrue(response.contains("Dec 03 2019"));
@@ -50,7 +50,7 @@ public class JimboTest {
         jimbo.getResponse("event team meeting /from 2/12/2019 1400 /to 2/12/2019 1600");
 
         jimbo.getResponse("update 1 /from 2/12/2019 1000");
-        String response = jimbo.getResponse("update 1 /to 2/12/2019 1100");
+        String response = jimbo.getResponse("update 1 /to 2/12/2019 1100").text();
 
         assertTrue(response.contains("10:00AM"));
         assertTrue(response.contains("11:00AM"));
@@ -61,9 +61,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("todo read book");
 
-        String response = jimbo.getResponse("update 1 /by 3/12/2019 0900");
+        Jimbo.Response response = jimbo.getResponse("update 1 /by 3/12/2019 0900");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 
     @Test
@@ -71,9 +72,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("deadline submit report /by 2/12/2019 1800");
 
-        String response = jimbo.getResponse("update 1 /from 3/12/2019 0900");
+        Jimbo.Response response = jimbo.getResponse("update 1 /from 3/12/2019 0900");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 
     @Test
@@ -81,9 +83,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("todo read book");
 
-        String response = jimbo.getResponse("update 1 /nope something");
+        Jimbo.Response response = jimbo.getResponse("update 1 /nope something");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 
     @Test
@@ -91,9 +94,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("todo read book");
 
-        String response = jimbo.getResponse("update 1 /desc");
+        Jimbo.Response response = jimbo.getResponse("update 1 /desc");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 
     @Test
@@ -101,9 +105,10 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("todo read book");
 
-        String response = jimbo.getResponse("update 99 /desc new description");
+        Jimbo.Response response = jimbo.getResponse("update 99 /desc new description");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 
     @Test
@@ -111,8 +116,9 @@ public class JimboTest {
         Jimbo jimbo = newJimbo();
         jimbo.getResponse("deadline submit report /by 2/12/2019 1800");
 
-        String response = jimbo.getResponse("update 1 /by tomorrow");
+        Jimbo.Response response = jimbo.getResponse("update 1 /by tomorrow");
 
-        assertTrue(response.startsWith("Oopsie"));
+        assertTrue(response.isError());
+        assertTrue(response.text().startsWith("Oopsie"));
     }
 }

@@ -49,9 +49,9 @@ public class Jimbo {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String command = scanner.nextLine();
-            String response = getResponse(command);
+            Response response = getResponse(command);
             System.out.println(ui.showLine());
-            System.out.println(response);
+            System.out.println(response.text());
             System.out.println(ui.showLine());
             if (command.equals("bye")) {
                 break;
@@ -61,13 +61,21 @@ public class Jimbo {
     }
 
     /**
-     * Interprets a single line of user input and returns Jimbo's reply as a
-     * plain string, applying whatever task-list/storage change the command
-     * implies. This is the sole place command dispatch happens, so it can be
-     * driven by a console loop (see {@link #run()}), a future GUI, or a unit
-     * test, all without duplicating the parsing/response logic.
+     * Jimbo's reply to a single command: the message text, and whether it
+     * represents an error (so callers like the GUI can style it
+     * differently) rather than a normal confirmation.
      */
-    public String getResponse(String input) {
+    public record Response(String text, boolean isError) {
+    }
+
+    /**
+     * Interprets a single line of user input and returns Jimbo's reply,
+     * applying whatever task-list/storage change the command implies. This
+     * is the sole place command dispatch happens, so it can be driven by a
+     * console loop (see {@link #run()}), a future GUI, or a unit test, all
+     * without duplicating the parsing/response logic.
+     */
+    public Response getResponse(String input) {
         try {
             String[] tokens = input.split(" ", 2);
             String commandWord = tokens[0];
@@ -75,42 +83,42 @@ public class Jimbo {
 
             switch (commandWord) {
                 case "bye" -> {
-                    return ui.showGoodbye();
+                    return new Response(ui.showGoodbye(), false);
                 }
                 case "list" -> {
-                    return ui.showTaskList(tasks);
+                    return new Response(ui.showTaskList(tasks), false);
                 }
                 case "mark" -> {
                     int index = parser.parseTaskIndex(tasks, args, "mark");
-                    return setTaskDone(index, DoneStatus.DONE);
+                    return new Response(setTaskDone(index, DoneStatus.DONE), false);
                 }
                 case "unmark" -> {
                     int index = parser.parseTaskIndex(tasks, args, "unmark");
-                    return setTaskDone(index, DoneStatus.NOT_DONE);
+                    return new Response(setTaskDone(index, DoneStatus.NOT_DONE), false);
                 }
                 case "todo" -> {
-                    return addTask(parser.parseTodo(args));
+                    return new Response(addTask(parser.parseTodo(args)), false);
                 }
                 case "deadline" -> {
-                    return addTask(parser.parseDeadline(args));
+                    return new Response(addTask(parser.parseDeadline(args)), false);
                 }
                 case "event" -> {
-                    return addTask(parser.parseEvent(args));
+                    return new Response(addTask(parser.parseEvent(args)), false);
                 }
                 case "delete" -> {
                     int index = parser.parseTaskIndex(tasks, args, "delete");
-                    return deleteTask(index);
+                    return new Response(deleteTask(index), false);
                 }
                 case "update" -> {
-                    return updateTask(args);
+                    return new Response(updateTask(args), false);
                 }
                 case "find" -> {
-                    return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
+                    return new Response(ui.showMatchingTasks(tasks.find(parser.parseFind(args))), false);
                 }
                 default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
             }
         } catch (JimboException e) {
-            return ui.showError(e.getMessage());
+            return new Response(ui.showError(e.getMessage()), true);
         }
     }
 

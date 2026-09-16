@@ -115,7 +115,7 @@ public class Jimbo {
                 case "find" -> {
                     return new Response(ui.showMatchingTasks(tasks.find(parser.parseFind(args))), false);
                 }
-                default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
+                default -> throw new JimboException("I don't know what that means!");
             }
         } catch (JimboException e) {
             return new Response(ui.showError(e.getMessage()), true);

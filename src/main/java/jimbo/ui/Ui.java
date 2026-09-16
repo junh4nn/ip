@@ -35,14 +35,14 @@ public class Ui {
                 + "/\\__/ /  _| |_  | |  | | | |_/ / \\ \\_/ /\n"
                 + "\\____/   \\___/  \\_|  |_/ \\____/   \\___/ \n";
 
-        return banner + "\nHello! I'm Jimbo.\nWhat can I do for you?";
+        return banner + "\n*chomp chomp* Hiii, I'm Jimbo! Got any tasks for me to nom on?";
     }
 
     /**
      * Returns the goodbye message shown when the user types "bye".
      */
     public String showGoodbye() {
-        return "Bye. Hope to see you again soon!";
+        return "Nom nom nom... byeee! *burp* Come back with more tasks soon!";
     }
 
     /**
@@ -62,8 +62,8 @@ public class Ui {
      */
     public String showTaskMarked(Task task, boolean isDone) {
         String heading = isDone
-                ? "Nice! I've marked this task as done:"
-                : "OK, I've marked this task as not done yet:";
+                ? "Yum! Gobbled this one right up:"
+                : "Aww, spat this one back out — not done yet:";
         return heading + "\n  " + task;
     }
 
@@ -72,8 +72,8 @@ public class Ui {
      * updated task count.
      */
     public String showTaskAdded(Task task, int taskCount) {
-        return "Got it. I've added this task:\n  " + task
-                + "\nNow you have " + taskCount + " tasks in the list.";
+        return "*chomp* Added this to my plate:\n  " + task
+                + "\nI've got " + taskCount + " tasks to munch through now.";
     }
 
     /**
@@ -81,15 +81,15 @@ public class Ui {
      * updated task count.
      */
     public String showTaskDeleted(Task task, int taskCount) {
-        return "Noted. I've removed this task:\n  " + task
-                + "\nNow you have " + taskCount + " tasks in the list.";
+        return "Pfft, tossed this one out:\n  " + task
+                + "\n" + taskCount + " tasks left on my plate.";
     }
 
     /**
      * Returns the confirmation shown after a task's details are updated.
      */
     public String showTaskUpdated(Task task) {
-        return "Got it. I've updated this task:\n  " + task;
+        return "Mmm, tastes different now:\n  " + task;
     }
 
     /**
@@ -98,9 +98,9 @@ public class Ui {
      */
     public String showMatchingTasks(ArrayList<Task> matches) {
         if (matches.isEmpty()) {
-            return "I couldn't find any matching tasks in your list.";
+            return "Sniff sniff... nothing on my plate smells like that.";
         }
-        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:");
+        StringBuilder sb = new StringBuilder("Ooh, I sniffed out these tasty matches:");
         for (int i = 0; i < matches.size(); i++) {
             sb.append("\n").append(i + 1).append(") ").append(matches.get(i));
         }
@@ -111,6 +111,6 @@ public class Ui {
      * Returns an error message in response to a {@link JimboException}.
      */
     public String showError(String message) {
-        return "Oopsie.. " + message;
+        return "Yuck, that's not candy! " + message;
     }
 }

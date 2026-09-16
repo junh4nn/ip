@@ -64,7 +64,7 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 1 /by 3/12/2019 0900");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 1 /from 3/12/2019 0900");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 1 /nope something");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 1 /desc");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 99 /desc new description");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 
     @Test
@@ -119,6 +119,6 @@ public class JimboTest {
         Jimbo.Response response = jimbo.getResponse("update 1 /by tomorrow");
 
         assertTrue(response.isError());
-        assertTrue(response.text().startsWith("Oopsie"));
+        assertTrue(response.text().startsWith("Yuck, that's not candy!"));
     }
 }

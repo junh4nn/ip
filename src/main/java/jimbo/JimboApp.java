@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import jimbo.gui.MainWindow;
@@ -23,7 +24,13 @@ public class JimboApp extends Application {
 
         fxmlLoader.<MainWindow>getController().setJimbo(jimbo);
 
-        stage.setScene(new Scene(root));
+        stage.setTitle("Jimbo");
+        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/Jimbo.png")));
+        stage.setScene(new Scene(root, 580, 820));
+        stage.setMinWidth(580);
+        stage.setMinHeight(820);
         stage.show();
+        stage.toFront();
+        stage.requestFocus();
     }
 }

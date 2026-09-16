@@ -25,7 +25,7 @@ public class MainWindow {
     private Jimbo jimbo;
 
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
-    private final Image jimboImage = new Image(this.getClass().getResourceAsStream("/images/Jimbo.jpeg"));
+    private final Image jimboImage = new Image(this.getClass().getResourceAsStream("/images/Jimbo.png"));
 
     /**
      * Called by the FXML loader after all {@code @FXML} fields are injected.

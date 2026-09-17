@@ -1,5 +1,5 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #4a90e2, #357abd);
+    -fx-background-color: linear-gradient(to bottom right, #ffb347, #e8961e);
     -fx-text-fill: white;
     -fx-background-radius: 15;
     -fx-padding: 8 12 8 12;
@@ -7,8 +7,14 @@
 }
 
 .reply-label {
-    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #c8c8c8);
-    -fx-text-fill: #202020;
+    -fx-background-color: linear-gradient(to bottom right, #97d300, #6ca41d);
+    -fx-text-fill: #1c3200;
+}
+
+.error-label {
+    -fx-background-color: linear-gradient(to bottom right, #8b1a1a, #5c1010);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 #displayPicture {

@@ -49,9 +49,9 @@ public class Jimbo {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String command = scanner.nextLine();
-            String response = getResponse(command);
+            Response response = getResponse(command);
             System.out.println(ui.showLine());
-            System.out.println(response);
+            System.out.println(response.text());
             System.out.println(ui.showLine());
             if (command.equals("bye")) {
                 break;
@@ -61,13 +61,29 @@ public class Jimbo {
     }
 
     /**
-     * Interprets a single line of user input and returns Jimbo's reply as a
-     * plain string, applying whatever task-list/storage change the command
-     * implies. This is the sole place command dispatch happens, so it can be
-     * driven by a console loop (see {@link #run()}), a future GUI, or a unit
-     * test, all without duplicating the parsing/response logic.
+     * Returns the startup banner, greeting, and command list shown when the
+     * GUI first opens.
      */
-    public String getResponse(String input) {
+    public String getWelcomeMessage() {
+        return ui.showGuiWelcome();
+    }
+
+    /**
+     * Jimbo's reply to a single command: the message text, and whether it
+     * represents an error (so callers like the GUI can style it
+     * differently) rather than a normal confirmation.
+     */
+    public record Response(String text, boolean isError) {
+    }
+
+    /**
+     * Interprets a single line of user input and returns Jimbo's reply,
+     * applying whatever task-list/storage change the command implies. This
+     * is the sole place command dispatch happens, so it can be driven by a
+     * console loop (see {@link #run()}), a future GUI, or a unit test, all
+     * without duplicating the parsing/response logic.
+     */
+    public Response getResponse(String input) {
         try {
             String[] tokens = input.split(" ", 2);
             String commandWord = tokens[0];
@@ -75,42 +91,45 @@ public class Jimbo {
 
             switch (commandWord) {
                 case "bye" -> {
-                    return ui.showGoodbye();
+                    return new Response(ui.showGoodbye(), false);
+                }
+                case "help" -> {
+                    return new Response(ui.showHelp(), false);
                 }
                 case "list" -> {
-                    return ui.showTaskList(tasks);
+                    return new Response(ui.showTaskList(tasks), false);
                 }
                 case "mark" -> {
                     int index = parser.parseTaskIndex(tasks, args, "mark");
-                    return setTaskDone(index, DoneStatus.DONE);
+                    return new Response(setTaskDone(index, DoneStatus.DONE), false);
                 }
                 case "unmark" -> {
                     int index = parser.parseTaskIndex(tasks, args, "unmark");
-                    return setTaskDone(index, DoneStatus.NOT_DONE);
+                    return new Response(setTaskDone(index, DoneStatus.NOT_DONE), false);
                 }
                 case "todo" -> {
-                    return addTask(parser.parseTodo(args));
+                    return new Response(addTask(parser.parseTodo(args)), false);
                 }
                 case "deadline" -> {
-                    return addTask(parser.parseDeadline(args));
+                    return new Response(addTask(parser.parseDeadline(args)), false);
                 }
                 case "event" -> {
-                    return addTask(parser.parseEvent(args));
+                    return new Response(addTask(parser.parseEvent(args)), false);
                 }
                 case "delete" -> {
                     int index = parser.parseTaskIndex(tasks, args, "delete");
-                    return deleteTask(index);
+                    return new Response(deleteTask(index), false);
                 }
                 case "update" -> {
-                    return updateTask(args);
+                    return new Response(updateTask(args), false);
                 }
                 case "find" -> {
-                    return ui.showMatchingTasks(tasks.find(parser.parseFind(args)));
+                    return new Response(ui.showMatchingTasks(tasks.find(parser.parseFind(args))), false);
                 }
-                default -> throw new JimboException("I'm sorry, but I don't know what that means :-(");
+                default -> throw new JimboException("I don't know what that means!");
             }
         } catch (JimboException e) {
-            return ui.showError(e.getMessage());
+            return new Response(ui.showError(e.getMessage()), true);
         }
     }
 
@@ -157,14 +176,14 @@ public class Jimbo {
         String[] indexAndRest = args.split(" ", 2);
         int index = parser.parseTaskIndex(tasks, indexAndRest[0], "update");
         if (indexAndRest.length < 2 || indexAndRest[1].trim().isEmpty()) {
-            throw new JimboException("Please tell me what to update, e.g. \"update 2 /by 3/12/2019 1800\".");
+            throw new JimboException("Tell me what to update — try \"update 2 /by 3/12/2019 1800\".");
         }
 
         String[] flagAndValue = indexAndRest[1].trim().split(" ", 2);
         String flag = flagAndValue[0];
         String value = flagAndValue.length > 1 ? flagAndValue[1].trim() : "";
         if (value.isEmpty()) {
-            throw new JimboException("Please provide a new value after \"" + flag + "\".");
+            throw new JimboException("Gimme a new value after \"" + flag + "\"!");
         }
 
         Task task = tasks.get(index);
@@ -172,24 +191,24 @@ public class Jimbo {
             case "/desc" -> task.setDescription(value);
             case "/by" -> {
                 if (!(task instanceof Deadline deadline)) {
-                    throw new JimboException("Only a deadline has a \"/by\" time to update.");
+                    throw new JimboException("Only deadlines have a \"/by\" time.");
                 }
                 deadline.setBy(value);
             }
             case "/from" -> {
                 if (!(task instanceof Event event)) {
-                    throw new JimboException("Only an event has a \"/from\" time to update.");
+                    throw new JimboException("Only events have a \"/from\" time.");
                 }
                 event.setFrom(value);
             }
             case "/to" -> {
                 if (!(task instanceof Event event)) {
-                    throw new JimboException("Only an event has a \"/to\" time to update.");
+                    throw new JimboException("Only events have a \"/to\" time.");
                 }
                 event.setTo(value);
             }
-            default -> throw new JimboException("\"" + flag + "\" is not something I can update. "
-                    + "Try \"/desc\", \"/by\", \"/from\", or \"/to\".");
+            default -> throw new JimboException("Can't update \"" + flag + "\" — "
+                    + "try \"/desc\", \"/by\", \"/from\", or \"/to\".");
         }
 
         storage.save(tasks.getTasks());

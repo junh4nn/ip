@@ -62,11 +62,16 @@ public class DialogBox extends HBox {
 
     /**
      * Creates a dialog box for a reply from Jimbo, flipped so its avatar
-     * appears on the left.
+     * appears on the left. {@code isError} styles the bubble as an error
+     * (see {@code error-label} in {@code dialog-box.css}) instead of a
+     * normal reply, so mistakes catch the user's eye.
      */
-    public static DialogBox getJimboDialog(String text, Image img) {
+    public static DialogBox getJimboDialog(String text, Image img, boolean isError) {
         DialogBox db = new DialogBox(text, img);
         db.flip();
+        if (isError) {
+            db.dialog.getStyleClass().add("error-label");
+        }
         return db;
     }
 }

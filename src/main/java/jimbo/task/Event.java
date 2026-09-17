@@ -65,8 +65,8 @@ public class Event extends Task {
         try {
             this.from = LocalDateTime.parse(from, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid event start date/time \"" + from
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+            throw new JimboException("\"" + from
+                    + "\" isn't a start date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
         }
     }
 
@@ -81,8 +81,8 @@ public class Event extends Task {
         try {
             this.to = LocalDateTime.parse(to, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid event end date/time \"" + to
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+            throw new JimboException("\"" + to
+                    + "\" isn't an end date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
         }
     }
 

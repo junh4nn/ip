@@ -39,10 +39,13 @@ public class MainWindow {
     }
 
     /**
-     * Injects the {@link Jimbo} instance this window sends user input to.
+     * Injects the {@link Jimbo} instance this window sends user input to,
+     * and shows Jimbo's welcome message as the first dialog box in the chat.
      */
     public void setJimbo(Jimbo jimbo) {
         this.jimbo = jimbo;
+        dialogContainer.getChildren().add(
+                DialogBox.getJimboDialog(jimbo.getWelcomeMessage(), jimboImage, false));
     }
 
     /**
@@ -53,10 +56,10 @@ public class MainWindow {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = jimbo.getResponse(input);
+        Jimbo.Response response = jimbo.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getJimboDialog(response, jimboImage)
+                DialogBox.getJimboDialog(response.text(), jimboImage, response.isError())
         );
         userInput.clear();
     }

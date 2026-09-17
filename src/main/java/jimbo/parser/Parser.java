@@ -23,7 +23,7 @@ public class Parser {
      */
     public Task parseTodo(String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimboException("The description of a todo cannot be empty.");
+            throw new JimboException("A todo can't be empty — gimme something to nom on!");
         }
         return new Todo(rest);
     }
@@ -36,17 +36,17 @@ public class Parser {
      */
     public Task parseDeadline(String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimboException("The description of a deadline cannot be empty.");
+            throw new JimboException("A deadline can't be empty — tell me what needs doing!");
         }
         String[] parts = rest.split(" /by ", 2);
         if (parts.length < 2) {
-            throw new JimboException("A deadline needs a \"/by\" time, e.g. "
-                    + "\"deadline return book /by Sunday\".");
+            throw new JimboException("A deadline needs a \"/by\" time so I know when it goes stale — "
+                    + "try \"deadline return book /by Sunday\".");
         }
         String description = parts[0].trim();
         String by = parts[1].trim();
         if (description.isEmpty()) {
-            throw new JimboException("The description of a deadline cannot be empty.");
+            throw new JimboException("A deadline can't be empty — tell me what needs doing!");
         }
         return new Deadline(description, by);
     }
@@ -60,29 +60,29 @@ public class Parser {
      */
     public Task parseEvent(String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimboException("The description of an event cannot be empty.");
+            throw new JimboException("An event can't be empty — tell me what's happening!");
         }
         String[] parts = rest.split(" /from ", 2);
         if (parts.length < 2) {
-            throw new JimboException("An event needs a \"/from\" and \"/to\" time, e.g. "
+            throw new JimboException("An event needs a \"/from\" and \"/to\" time — try "
                     + "\"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         String description = parts[0].trim();
         if (description.isEmpty()) {
-            throw new JimboException("The description of an event cannot be empty.");
+            throw new JimboException("An event can't be empty — tell me what's happening!");
         }
         String[] timeParts = parts[1].split(" /to ", 2);
         if (timeParts.length < 2) {
-            throw new JimboException("An event needs a \"/to\" time, e.g. "
+            throw new JimboException("An event still needs a \"/to\" time — try "
                     + "\"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         String from = timeParts[0].trim();
         String to = timeParts[1].trim();
         if (from.isEmpty()) {
-            throw new JimboException("Please specify a start time for the event after \"/from\".");
+            throw new JimboException("Gimme a start time after \"/from\"!");
         }
         if (to.isEmpty()) {
-            throw new JimboException("Please specify an end time for the event after \"/to\".");
+            throw new JimboException("Gimme an end time after \"/to\"!");
         }
         return new Event(description, from, to);
     }
@@ -95,7 +95,7 @@ public class Parser {
      */
     public String parseFind(String rest) throws JimboException {
         if (rest.isEmpty()) {
-            throw new JimboException("Please tell me what keyword to search for, e.g. \"find book\".");
+            throw new JimboException("Gimme a keyword to search for — try \"find book\".");
         }
         return rest;
     }
@@ -112,18 +112,18 @@ public class Parser {
     public int parseTaskIndex(TaskList tasks, String indexArg, String commandName) throws JimboException {
         String trimmed = indexArg.trim();
         if (trimmed.isEmpty()) {
-            throw new JimboException("Please tell me which task number to " + commandName
-                    + ", e.g. \"" + commandName + " 2\".");
+            throw new JimboException("Gimme a task number to " + commandName
+                    + " — try \"" + commandName + " 2\".");
         }
         int index;
         try {
             index = Integer.parseInt(trimmed) - 1;
         } catch (NumberFormatException e) {
-            throw new JimboException("\"" + trimmed + "\" is not a valid task number.");
+            throw new JimboException("\"" + trimmed + "\" isn't a real task number.");
         }
         if (index < 0 || index >= tasks.size()) {
-            throw new JimboException("Task number " + (index + 1) + " doesn't exist. "
-                    + "You currently have " + tasks.size() + " task(s) in the list.");
+            throw new JimboException("Task " + (index + 1) + " doesn't exist — "
+                    + "you've only got " + tasks.size() + " task(s) right now.");
         }
         assert index >= 0 && index < tasks.size()
                 : "index should be within bounds of tasks whenever this method returns normally";

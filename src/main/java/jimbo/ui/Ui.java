@@ -32,14 +32,6 @@ public class Ui {
             + "- bye: I'll head off";
 
     /**
-     * Returns the horizontal divider line used to separate sections of
-     * console output.
-     */
-    public String showLine() {
-        return LINE;
-    }
-
-    /**
      * ASCII art banner shown above the greeting in the console UI. Left out
      * of the GUI's welcome message ({@link #showGuiWelcome()}) since the
      * chat window already shows Jimbo's picture.
@@ -50,6 +42,14 @@ public class Ui {
             + "    | |   | |   | |\\/| | | ___ \\ | | | |\n"
             + "/\\__/ /  _| |_  | |  | | | |_/ / \\ \\_/ /\n"
             + "\\____/   \\___/  \\_|  |_/ \\____/   \\___/ \n";
+
+    /**
+     * Returns the horizontal divider line used to separate sections of
+     * console output.
+     */
+    public String showLine() {
+        return LINE;
+    }
 
     /**
      * Returns the startup banner and welcome message, for the console UI.

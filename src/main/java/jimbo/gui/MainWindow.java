@@ -1,11 +1,14 @@
 package jimbo.gui;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import jimbo.Jimbo;
 
 /**
@@ -51,7 +54,8 @@ public class MainWindow {
     /**
      * Reads the text currently in {@code userInput}, gets Jimbo's reply,
      * appends both as dialog boxes to {@code dialogContainer}, then clears
-     * the input field.
+     * the input field. If the command was "bye", closes the app shortly
+     * after, once the user has had a moment to see the goodbye message.
      */
     @FXML
     private void handleUserInput() {
@@ -62,5 +66,11 @@ public class MainWindow {
                 DialogBox.getJimboDialog(response.text(), jimboImage, response.isError())
         );
         userInput.clear();
+
+        if (input.equals("bye")) {
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.1));
+            delay.setOnFinished(event -> Platform.exit());
+            delay.play();
+        }
     }
 }

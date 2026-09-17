@@ -61,6 +61,14 @@ public class Jimbo {
     }
 
     /**
+     * Returns the startup banner, greeting, and command list shown when the
+     * GUI first opens.
+     */
+    public String getWelcomeMessage() {
+        return ui.showGuiWelcome();
+    }
+
+    /**
      * Jimbo's reply to a single command: the message text, and whether it
      * represents an error (so callers like the GUI can style it
      * differently) rather than a normal confirmation.
@@ -84,6 +92,9 @@ public class Jimbo {
             switch (commandWord) {
                 case "bye" -> {
                     return new Response(ui.showGoodbye(), false);
+                }
+                case "help" -> {
+                    return new Response(ui.showHelp(), false);
                 }
                 case "list" -> {
                     return new Response(ui.showTaskList(tasks), false);
@@ -165,14 +176,14 @@ public class Jimbo {
         String[] indexAndRest = args.split(" ", 2);
         int index = parser.parseTaskIndex(tasks, indexAndRest[0], "update");
         if (indexAndRest.length < 2 || indexAndRest[1].trim().isEmpty()) {
-            throw new JimboException("Please tell me what to update, e.g. \"update 2 /by 3/12/2019 1800\".");
+            throw new JimboException("Tell me what to update — try \"update 2 /by 3/12/2019 1800\".");
         }
 
         String[] flagAndValue = indexAndRest[1].trim().split(" ", 2);
         String flag = flagAndValue[0];
         String value = flagAndValue.length > 1 ? flagAndValue[1].trim() : "";
         if (value.isEmpty()) {
-            throw new JimboException("Please provide a new value after \"" + flag + "\".");
+            throw new JimboException("Gimme a new value after \"" + flag + "\"!");
         }
 
         Task task = tasks.get(index);
@@ -180,24 +191,24 @@ public class Jimbo {
             case "/desc" -> task.setDescription(value);
             case "/by" -> {
                 if (!(task instanceof Deadline deadline)) {
-                    throw new JimboException("Only a deadline has a \"/by\" time to update.");
+                    throw new JimboException("Only deadlines have a \"/by\" time.");
                 }
                 deadline.setBy(value);
             }
             case "/from" -> {
                 if (!(task instanceof Event event)) {
-                    throw new JimboException("Only an event has a \"/from\" time to update.");
+                    throw new JimboException("Only events have a \"/from\" time.");
                 }
                 event.setFrom(value);
             }
             case "/to" -> {
                 if (!(task instanceof Event event)) {
-                    throw new JimboException("Only an event has a \"/to\" time to update.");
+                    throw new JimboException("Only events have a \"/to\" time.");
                 }
                 event.setTo(value);
             }
-            default -> throw new JimboException("\"" + flag + "\" is not something I can update. "
-                    + "Try \"/desc\", \"/by\", \"/from\", or \"/to\".");
+            default -> throw new JimboException("Can't update \"" + flag + "\" — "
+                    + "try \"/desc\", \"/by\", \"/from\", or \"/to\".");
         }
 
         storage.save(tasks.getTasks());

@@ -58,8 +58,8 @@ public class Deadline extends Task {
         try {
             this.by = LocalDateTime.parse(by, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new JimboException("Invalid deadline date/time \"" + by
-                    + "\". Please use the format d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+            throw new JimboException("\"" + by
+                    + "\" isn't a date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
         }
     }
 

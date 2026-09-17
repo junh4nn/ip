@@ -39,10 +39,13 @@ public class MainWindow {
     }
 
     /**
-     * Injects the {@link Jimbo} instance this window sends user input to.
+     * Injects the {@link Jimbo} instance this window sends user input to,
+     * and shows Jimbo's welcome message as the first dialog box in the chat.
      */
     public void setJimbo(Jimbo jimbo) {
         this.jimbo = jimbo;
+        dialogContainer.getChildren().add(
+                DialogBox.getJimboDialog(jimbo.getWelcomeMessage(), jimboImage, false));
     }
 
     /**

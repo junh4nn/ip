@@ -9,21 +9,21 @@ import jimbo.exception.JimboException;
 
 /**
  * Represents a task that starts at a specific date/time and ends at a
- * specific date/time, e.g. "team project meeting /from 2/10/2019 1400
- * /to 2/10/2019 1600". Note that {@code from} and {@code to} are each a
+ * specific date/time, e.g. "team project meeting /from 2/10/2026 1400
+ * /to 2/10/2026 1600". Note that {@code from} and {@code to} are each a
  * full date/time on their own; the date is not shared or inferred between
  * them, so it must be repeated even when both fall on the same day.
  */
 public class Event extends Task {
     /**
      * Format accepted for the "from"/"to" date/time when typed by the user
-     * in a command, e.g. "2/12/2019 1800".
+     * in a command, e.g. "2/12/2026 1800".
      */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Format used to display the "from"/"to" date/time back to the user,
-     * e.g. "Dec 02 2019, 6:00PM". Pinned to {@link Locale#US} so the month
+     * e.g. "Dec 02 2026, 6:00PM". Pinned to {@link Locale#US} so the month
      * name and AM/PM marker render the same way regardless of the machine's
      * default locale (some locales render the AM/PM marker in lowercase).
      */
@@ -36,7 +36,7 @@ public class Event extends Task {
     /**
      * @throws JimboException if {@code from} or {@code to} does not match
      *                        the expected "d/M/yyyy HHmm" format, e.g.
-     *                        "2/12/2019 1800".
+     *                        "2/12/2026 1800".
      */
     public Event(String description, String from, String to) throws JimboException {
         super(description);
@@ -59,14 +59,14 @@ public class Event extends Task {
      * "update" command.
      *
      * @throws JimboException if {@code from} does not match the expected
-     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2026 1800".
      */
     public void setFrom(String from) throws JimboException {
         try {
             this.from = LocalDateTime.parse(from, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
             throw new JimboException("\"" + from
-                    + "\" isn't a start date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+                    + "\" isn't a start date I understand — use d/M/yyyy HHmm, e.g. 2/12/2026 1800.");
         }
     }
 
@@ -75,14 +75,14 @@ public class Event extends Task {
      * "update" command.
      *
      * @throws JimboException if {@code to} does not match the expected
-     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2026 1800".
      */
     public void setTo(String to) throws JimboException {
         try {
             this.to = LocalDateTime.parse(to, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
             throw new JimboException("\"" + to
-                    + "\" isn't an end date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+                    + "\" isn't an end date I understand — use d/M/yyyy HHmm, e.g. 2/12/2026 1800.");
         }
     }
 

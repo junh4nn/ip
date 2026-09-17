@@ -9,18 +9,18 @@ import jimbo.exception.JimboException;
 
 /**
  * Represents a task that needs to be done before a specific date/time,
- * e.g. "submit report by 11/10/2019 5pm".
+ * e.g. "submit report by 11/10/2026 5pm".
  */
 public class Deadline extends Task {
     /**
      * Format accepted for the "by" date/time when typed by the user in a
-     * command, e.g. "2/12/2019 1800".
+     * command, e.g. "2/12/2026 1800".
      */
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     /**
      * Format used to display the "by" date/time back to the user,
-     * e.g. "Dec 02 2019, 6:00PM". Pinned to {@link Locale#US} so the month
+     * e.g. "Dec 02 2026, 6:00PM". Pinned to {@link Locale#US} so the month
      * name and AM/PM marker render the same way regardless of the machine's
      * default locale (some locales render the AM/PM marker in lowercase).
      */
@@ -31,7 +31,7 @@ public class Deadline extends Task {
 
     /**
      * @throws JimboException if {@code by} does not match the expected
-     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2026 1800".
      */
     public Deadline(String description, String by) throws JimboException {
         super(description);
@@ -52,14 +52,14 @@ public class Deadline extends Task {
      * "update" command.
      *
      * @throws JimboException if {@code by} does not match the expected
-     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2019 1800".
+     *                        "d/M/yyyy HHmm" format, e.g. "2/12/2026 1800".
      */
     public void setBy(String by) throws JimboException {
         try {
             this.by = LocalDateTime.parse(by, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
             throw new JimboException("\"" + by
-                    + "\" isn't a date I understand — use d/M/yyyy HHmm, e.g. 2/12/2019 1800.");
+                    + "\" isn't a date I understand — use d/M/yyyy HHmm, e.g. 2/12/2026 1800.");
         }
     }
 

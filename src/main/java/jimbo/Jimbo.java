@@ -161,7 +161,7 @@ public class Jimbo {
     /**
      * Updates a single field of the task named in {@code args}, which must
      * be of the form "{@code <index> /<field> <new value>}", e.g.
-     * "{@code 2 /by 3/12/2019 1800}". Only one field can be updated per
+     * "{@code 2 /by 3/12/2026 1800}". Only one field can be updated per
      * command; {@code /desc} applies to any task type, while {@code /by}
      * (Deadline) and {@code /from}/{@code /to} (Event) are rejected if the
      * task at {@code index} is not of the matching type.
@@ -176,7 +176,7 @@ public class Jimbo {
         String[] indexAndRest = args.split(" ", 2);
         int index = parser.parseTaskIndex(tasks, indexAndRest[0], "update");
         if (indexAndRest.length < 2 || indexAndRest[1].trim().isEmpty()) {
-            throw new JimboException("Tell me what to update — try \"update 2 /by 3/12/2019 1800\".");
+            throw new JimboException("Tell me what to update — try \"update 2 /by 3/12/2026 1800\".");
         }
 
         String[] flagAndValue = indexAndRest[1].trim().split(" ", 2);

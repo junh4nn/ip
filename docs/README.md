@@ -139,3 +139,17 @@ you run `java -jar jimbo.jar` from, say, `~/Downloads`, Jimbo will create and us
 | Find | `find <keyword>` | `find book` |
 | Help | `help` | `help` |
 | Exit | `bye` | `bye` |
+
+## Citations
+
+### Images
+- Jimbo: https://www.pngegg.com/en/png-owaat#goog_rewarded
+- User: https://www.deviantart.com/zigzinha/art/Baby-Om-Nom-1267943923
+- Chat Background: https://www.deviantart.com/tomthedeviant2/art/Cut-the-Rope---Cardboard-Box-Background-906223262
+
+### Code
+AI was used to implement most of the code in this project. However, the high-level design decisions were mine.
+
+I decided where to apply object-oriented principles. An example would be that I made Task an abstract base class with Todo, Deadline, and Event as concrete subclasses. I also directed the separation of concerns across packages (parser, storage, task, ui, gui).
+
+The GUI's visual design was also done by me. Though I took heavy inspiration from the Cut the Rope game, I came up with colour scheme, the chosen character art, and Jimbo's food-obsessed personality myself!
